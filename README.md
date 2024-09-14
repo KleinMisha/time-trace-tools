@@ -1,5 +1,17 @@
 # Pytweezer Tools
+Analyze the data gathered at the Magnetic Tweezers 
 
+to add 
+1. Quickstart guide
+    * include Installation guide here
+2. core structure of code / key classes and functions 
+3. specific workflow to your experiments 
+    * Including a GUI? Don't start from scratch! 
+4. how this repository is organized 
+5. contributing / adding more code and functions 
+    * code organisation 
+    * Type suggestions, docstrings, and 'style conventions' 
+    * I want to build a GUI for my workflow 
 
 
 ## Getting started
