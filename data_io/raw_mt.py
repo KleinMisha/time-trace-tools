@@ -7,12 +7,12 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 import os 
 import sys
 import yaml 
-from typing import Union, Tuple, Dict, List, Any 
+from typing import Union, Tuple, Dict, List, Any, Callable 
 
 import numpy as np
 import pandas as pd  
 
-def read_mt_data(path: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, np.ndarray]:
+def read_mt_data(path: str) -> Tuple[np.ndarray, np.ndarray]:
     '''
     loads raw data from magnetic-tweezers (MT)
 
@@ -20,10 +20,8 @@ def read_mt_data(path: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, n
         path (str) : absolute path to data file 
     
     Returns: 
-        X (pd.DataFrame) : Dataframe with x-position for every bead (for every frame)
-        Y (pd.DataFrame) : Dataframe with y-position for every bead (for every frame)
-        Z (pd.DataFrame) : Dataframe with z-position for every bead (for every frame)
-        t (np.ndarray)   : Numpy Array with time at every frame 
+        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
+        np.ndarray: The time in seconds 
 
     Notes:
         uses file extension to check if the data has been taken using PyTweezers or LabView
