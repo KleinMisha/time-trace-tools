@@ -1,0 +1,21 @@
+{
+    // General settings
+    "window.zoomLevel": 3,    
+    "extensions.autoUpdate": "onlyEnabledExtensions",
+    
+
+    // Workbench settings
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.sideBar.location": "right",
+
+    // Editor settings
+    "ruff.importStrategy": "useBundled",
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.fontSize": 20
+
+    
+
+
+}
