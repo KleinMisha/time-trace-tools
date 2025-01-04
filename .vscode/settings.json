@@ -13,7 +13,17 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "editor.fontSize": 20
+    "editor.formatOnSaveMode": "file",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "editor.fontSize": 22,
+    "files.autoSave": "onFocusChange",
+    "editor.foldingImportsByDefault": true,
+    // Python/ Pylance settings
+    "python.analysis.typeCheckingMode": "basic",
+    
+    
 
     
 
