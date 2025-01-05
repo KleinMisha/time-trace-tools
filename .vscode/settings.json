@@ -22,6 +22,12 @@
     "editor.foldingImportsByDefault": true,
     // Python/ Pylance settings
     "python.analysis.typeCheckingMode": "basic",
+
+
+    // Spell checker settings
+    "cSpell.language": "en-US",
+    "cSpell.ignoreWords": ["ndarray"]
+
     
     
 
