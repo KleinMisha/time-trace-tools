@@ -1,6 +1,8 @@
 """
 Core class to define a single (time-) trace
-(In principle not restricted to data VS time and could be force VS extention etc.)
+Abstraction is used to define a time trace as anything that has a time array + any number of value arrays of equal length.
+
+- Misha, Jan 2025
 """
 
 from abc import ABC, abstractmethod
@@ -9,7 +11,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
-# custom error to improve readibility a bit
+# custom error to improve readability a bit
 class NotATimeTraceError(Exception):
     pass
 
@@ -28,7 +30,7 @@ class TimeTrace(ABC):
 
     @property
     @abstractmethod
-    def _values(self) -> tuple[np.ndarray]:
+    def _values(self) -> tuple[np.ndarray, ...]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation
@@ -72,6 +74,13 @@ class TimeTrace(ABC):
         else:
             # simply append to the list
             self.section_labels[key].append(label)
+
+    def remove_labels_from_section(
+        self, start_index: int, end_index: int, labels: list[str]
+    ) -> None:
+        key = (start_index, end_index)
+        for lbl in labels:
+            self.section_labels[key].remove(lbl)
 
     def remove_all_labels_from_section(self, start_index: int, end_index: int) -> None:
         key = (start_index, end_index)
