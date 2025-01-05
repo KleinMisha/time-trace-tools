@@ -45,7 +45,7 @@ y = bead_positions_xyz[0, :, 1]
 z = bead_positions_xyz[0, :, 2]
 
 # create the trace 
-trace = MagneticTweezerTrace(time, x,y,z, ID="bead_1")
+trace = MagneticTweezerTrace(t=time, x=x,y=y,z=z, ID="bead_1")
 # You now can find the z-position of the first bead by calling
 print(trace.z)
 ```
@@ -113,7 +113,7 @@ mt_experiment.traces : list[MagneticTweezerTrace]
 mt_experiment.substrace_reference_bead() #NOTE: you can use this function to change reference bead 
 
 # access the 50th trace for further inspection (just an example)
-trace_50 = mt_experiment.fetch_trace(ID="trace_50") 
+trace_50 = mt_experiment.fetch_trace(trace_id="trace_50") 
 
 ```
 Now you can access functions to assign a label to a (set of) trace(s), or to a part of a trace, simple access to all traces with a particular label, or access a particular part of all traces. 
