@@ -7,7 +7,7 @@ from typing import Dict, List
 
 import numpy as np
 
-from .trace import Trace
+from .time_trace import Trace
 
 
 def add(trace_1: Trace, trace_2: Trace) -> Trace:

@@ -12,6 +12,6 @@ import numpy as np
 import pandas as pd
 
 # from other packages in pytweezer-tools
-from .trace import Trace
+from .time_trace import Trace
 # from .experiment import Experiment
 # from .experiment_series import ExperimentSeries

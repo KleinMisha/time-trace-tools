@@ -4,7 +4,7 @@ Core class to define an experiment (containing a series of traces)
 """
 
 from typing import Any, List, Dict, Tuple
-from .trace import Trace
+from .time_trace import Trace
 from data_io.raw_mt import read_mt_data
 
 
