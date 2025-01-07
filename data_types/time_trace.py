@@ -7,12 +7,15 @@ Abstraction is used to define a time trace as anything that has a time array + a
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from typing import TypeVar
 
 import numpy as np
 
+TimeTraceType = TypeVar("TimeTraceType", bound="TimeTrace")
+
 
 # custom error to improve readability a bit
-class NotATimeTraceError(Exception):
+class InvalidTimeTraceError(Exception):
     pass
 
 
@@ -36,20 +39,28 @@ class TimeTrace(ABC):
         See subclasses for specific implementation
         """
 
+    @property
+    @abstractmethod
+    def _value_names(self) -> tuple[str, ...]:
+        """
+        return a tuple of the names of the values. Should be same as the variable names
+        used to instantiate class instance.
+        """
+
     def _validate_array_lengths(self) -> None:
         for i, value_array in enumerate(self._values):
             if not len(value_array) == len(self.t):
-                raise NotATimeTraceError(
+                raise InvalidTimeTraceError(
                     f"All values must have the same length as t. Expected {len(self.t)}, but {i}-th value has length of {len(value_array)}"
                 )
 
     def __post_init__(self) -> None:
         """
-        this function will automatically be excecuted when creating a TimeTrace (or an instance of a class inheriting from it).
+        this function will automatically be executed when creating a TimeTrace (or an instance of a class inheriting from it).
         dataclasses automatically creates things like the `__init__()` method. Hence, if you want something to happen straight after that
         you use the `__post_init__()` method when working with dataclasses.
         """
-        _ = self._values  # make sure to instaciate this attribute
+        _ = self._values  # make sure to instantiate this attribute
         self._validate_array_lengths()
 
     def __len__(self) -> int:

@@ -17,6 +17,7 @@ class MagneticTweezersTrace(TimeTrace):
     x: np.ndarray = field(default_factory=lambda: np.array([]))
     y: np.ndarray = field(default_factory=lambda: np.array([]))
     z: np.ndarray = field(default_factory=lambda: np.array([]))
+    is_REF: bool = False
 
     @property
     def _values(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -25,3 +26,11 @@ class MagneticTweezersTrace(TimeTrace):
         See subclasses for specific implementation
         """
         return (self.x, self.y, self.z)
+
+    @property
+    def _value_names(self) -> tuple[str, ...]:
+        """
+        return a tuple of the names of the values. Should be same as the variable names
+        used to instantiate class instance.
+        """
+        return ("x", "y", "z")

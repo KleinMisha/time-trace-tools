@@ -5,19 +5,15 @@ Core class to define a series of experiments (each containing a series of traces
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any, Callable, Generic
 
-from time_trace import NotATimeTraceError, TimeTrace
+from time_trace import TimeTraceType
 
 
 @dataclass
-class Experiment(ABC):
-    """
-    will populate later
-    """
-
+class Experiment(ABC, Generic[TimeTraceType]):
     ID: str
-    traces: list[TimeTrace] = field(default_factory=list)
+    traces: list[TimeTraceType] = field(default_factory=list)
     path_to_raw_data: str = ""
     experimental_conditions: dict[str, Any] = field(default_factory=dict)
 
@@ -31,7 +27,7 @@ class Experiment(ABC):
         self._raw_data = raw_data
 
     @abstractmethod
-    def _create_trace_list_from_raw_data(self) -> list[TimeTrace]:
+    def _create_trace_list_from_raw_data(self) -> list[TimeTraceType]:
         """
         Implement how the traces should be instantiated based on the loaded raw data
         As data from different experiments might have different structures, intentionally left this as abstract method
@@ -42,22 +38,20 @@ class Experiment(ABC):
         trace_list = self._create_trace_list_from_raw_data()
         self.traces = trace_list
 
-    def add_traces(self, trace_list: list[TimeTrace]) -> None:
+    def add_traces(self, trace_list: list[TimeTraceType]) -> None:
         self.traces.extend(trace_list)
 
     def remove_trace(self, trace_id: str) -> None:
         after_removal = [trace for trace in self.traces if trace.ID != trace_id]
         self.traces = after_removal
 
-    def fetch_trace(self, trace_id: str) -> TimeTrace:
+    def fetch_trace(self, trace_id: str) -> TimeTraceType:
         for trace in self.traces:
             if trace.ID == trace_id:
                 return trace
-        raise NotATimeTraceError(
-            f"Experiment does not contain TimeTrace with ID {trace_id}"
-        )
+        raise KeyError(f"Experiment does not contain TimeTrace with ID {trace_id}")
 
-    def fetch_traces_by_label(self, label: str) -> list[TimeTrace]:
+    def fetch_traces_by_label(self, label: str) -> list[TimeTraceType]:
         return [trace for trace in self.traces if label in trace.labels]
 
     def __len__(self) -> int:
