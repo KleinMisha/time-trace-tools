@@ -6,10 +6,12 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 """
 
 import os
+
 import numpy as np
 import pandas as pd
 import yaml
-from .labview_legacy import read_labview
+from labview_legacy import read_labview
+from typing import IO
 
 
 def read_mt_data(path: str) -> tuple[np.ndarray, np.ndarray]:
@@ -34,7 +36,7 @@ def read_mt_data(path: str) -> tuple[np.ndarray, np.ndarray]:
         return read_labview(path)
     else:
         raise ValueError(
-            "Not a vallid file type. Pytweezers stores data as .npy and LabView as .txt"
+            "Not a valid file type. Pytweezers stores data as .npy and LabView as .txt"
         )
 
 
@@ -55,8 +57,8 @@ def read_pytweezers(path: str) -> tuple[np.ndarray, np.ndarray]:
         pytweezer stores the data as (num_frames, num_beads, 3). For every frame you have x,y,z for every bead. Will parse it differently
     """
 
-    # --- the following functions are taken from pytweezer.utils.data_io (and just given different names for convinience-sake) ---
-    def _end_of_file(f: object) -> bool:
+    # --- the following functions are taken from pytweezers.utils.data_io (and just given different names for convinience-sake) ---
+    def _end_of_file(f: IO) -> bool:
         """
         check if you are at the end of the file
         """

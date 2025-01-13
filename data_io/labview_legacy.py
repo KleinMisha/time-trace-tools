@@ -10,8 +10,6 @@ import sys
 import numpy as np
 import pandas as pd
 
-from .raw_mt import read_mt_data
-
 
 # LabView :: Older data is taken before we had pytweezers, but we still want to inspect things the same way
 def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
@@ -26,7 +24,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
         np.ndarray: The time in seconds
 
     Notes:
-        reads the original .txt as a table, renames the collumns to more easily group together (x,y,z) of the same column
+        reads the original .txt as a table, renames the columns to more easily group together (x,y,z) of the same column
         NOTE: possibly could be done more efficient, but this is sufficient for now
     """
 
@@ -52,7 +50,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
     # --- Build the output array:  allocate X,Y,Z data as 3D np.array ---
     beads_xyz = np.zeros((num_beads, num_frames, 3))
     for bead_nr in range(num_beads):
-        cols = [f"Bead_{bead_nr+1}_{ax}" for ax in ["x", "y", "z"]]
+        cols = [f"Bead_{bead_nr + 1}_{ax}" for ax in ["x", "y", "z"]]
         one_bead = data[cols].values
         beads_xyz[bead_nr, :, :] = one_bead
 
@@ -61,12 +59,15 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
     return beads_xyz, t
 
 
-def pytweezer_to_labview(path_in: str, path_out: str) -> None:
+def pytweezer_to_labview(
+    pytweezers_xyz: np.ndarray, t: np.ndarray, path_out: str
+) -> None:
     """
     Converts PyTweezer data to a LabView-compatible format.
 
     Args:
-        path_in (str): Path to the input PyTweezer data file.
+        pytweezers_xyz (NumPy array): bead positions loaded using 'read_pytweezers()'
+        t (NumPy array): time array loaded using 'read_pytweezers()'
         path_out (str): Path to the output LabView-compatible data file.
 
     Returns:
@@ -78,22 +79,19 @@ def pytweezer_to_labview(path_in: str, path_out: str) -> None:
     with LabView software.
     """
 
-    # read the pytweezer data
-    pytweezer_xyz, t = read_mt_data(path_in)
+    # obtain number of frames and number of beads tracked from the pytweezers data
+    number_beads, number_frames, _ = pytweezers_xyz.shape
 
-    # obtain numnber of frames and number of beads tracked from the pytweezer data
-    nmbr_beads, nmbr_frames, _ = pytweezer_xyz.shape
+    # allocate an Numpy array to store the xyz positions (shape is to comply with old format). Time column will be added later
+    labview_xyz = np.zeros(shape=(number_frames, number_beads * 3))
 
-    # allocate an Numpy array to store the xyz positions (shape is to comply with old format). Time collumn will be added later
-    labview_xyz = np.zeros(shape=(nmbr_frames, nmbr_beads * 3))
-
-    # now reformat the data and store it into the newly alllocated array
+    # now reformat the data and store it into the newly allocated array
     col_nr = 0
-    for bead_nr in range(nmbr_beads):
+    for bead_nr in range(number_beads):
         for axes in range(3):
             # the collumn in the new array is "the bead number, or the the bead number +1 (for y) or +2 (for z)"
             # the input data will have the x,y,z positions stored in different axes of the 3D array
-            labview_xyz[:, col_nr] = pytweezer_xyz[bead_nr, :, axes]
+            labview_xyz[:, col_nr] = pytweezers_xyz[bead_nr, :, axes]
             col_nr += 1
 
     # convert positions into µM, in stead of nM
@@ -104,8 +102,8 @@ def pytweezer_to_labview(path_in: str, path_out: str) -> None:
 
     # convert into dataframe/ table
     column_names = [
-        f"Bead_{bead_nr+1}_{axes}"
-        for bead_nr in range(nmbr_beads)
+        f"Bead_{bead_nr + 1}_{axes}"
+        for bead_nr in range(number_beads)
         for axes in ["x", "y", "z"]
     ]
     labview_table = pd.DataFrame(labview_xyz, columns=column_names)

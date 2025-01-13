@@ -2,10 +2,11 @@
     // General settings
     "window.zoomLevel": 1,    
     "extensions.autoUpdate": "onlyEnabledExtensions",
+    "terminal.integrated.fontSize": 18,
     
 
     // Workbench settings
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Default Dark+",
     "editor.semanticTokenColorCustomizations": {
         "enabled": true,
         "rules": {
@@ -27,7 +28,7 @@
     },
     "editor.fontSize": 22,
     "files.autoSave": "onFocusChange",
-    "editor.foldingImportsByDefault": true,
+    "editor.foldingImportsByDefault": false,
 
 
 
@@ -37,7 +38,7 @@
 
     // Spell checker settings
     "cSpell.language": "en-US",
-    "cSpell.ignoreWords": ["ndarray"],
+    "cSpell.ignoreWords": ["ndarray", "labview", "pytw", "pytweezers"],
 
 
 
