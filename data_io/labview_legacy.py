@@ -4,9 +4,6 @@ Convert raw data from PyTweezer to LabView's format to use older GUIs
 -- Misha, October 2024
 """
 
-import os
-import sys
-
 import numpy as np
 import pandas as pd
 
@@ -20,7 +17,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
         path (str): absolute path to .txt file
 
     Returns:
-        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
+        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the columns and frames in the rows
         np.ndarray: The time in seconds
 
     Notes:
@@ -36,7 +33,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
     num_beads = (num_columns - 1) // 3
     num_frames = len(data)
 
-    # --- drop the final column with NaNs and the first collumn with just the index ---
+    # --- drop the final column with NaNs and the first column with just the index ---
     data.drop(columns=data.columns[[0, -1]], inplace=True)
 
     # rename the columns in the data
@@ -55,7 +52,9 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
         beads_xyz[bead_nr, :, :] = one_bead
 
     # -- time array ----
-    t = data["Time_ms"].values / 1000.0
+    # NOTE: `data["Time_ms"].values / 1000.0` totally works, but typechecker started to complaint about it, so opted for this more "pythonic" solution
+    # NOTE: Should not be too much of a performance drop.
+    t = np.array([t_ms / 1000.0 for t_ms in data["Time_ms"].values])
     return beads_xyz, t
 
 
