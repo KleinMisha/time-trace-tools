@@ -30,7 +30,7 @@ def _validate_traces_are_of_same_type(
 
 
 def _validate_time_arrays_align(trace_1: TimeTraceType, trace_2: TimeTraceType) -> None:
-    if np.not_equal(trace_1.t, trace_2.t):
+    if np.any(np.not_equal(trace_1.t, trace_2.t)):
         raise InvalidTimeTraceError(
             f"Time-axis of {trace_1.ID} does not coincide with that of {trace_2.ID}"
         )
