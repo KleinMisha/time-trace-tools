@@ -6,11 +6,12 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 """
 
 import os
+from typing import IO
 
 import numpy as np
 import yaml
-from labview_legacy import read_labview
-from typing import IO
+
+from .labview_legacy import read_labview
 
 
 def read_mt_data(path: str) -> tuple[np.ndarray, np.ndarray]:
