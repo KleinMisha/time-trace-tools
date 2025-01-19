@@ -7,7 +7,8 @@ from copy import deepcopy
 from typing import Optional
 
 import numpy as np
-from time_trace import InvalidTimeTraceError, TimeTraceType
+
+from .time_trace import InvalidTimeTraceError, TimeTraceType
 
 
 def _validate_traces_are_equal_length(

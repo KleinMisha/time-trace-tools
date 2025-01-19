@@ -6,7 +6,8 @@ These are time traces with x,y, and z position information of the bead.
 from dataclasses import dataclass, field
 
 import numpy as np
-from time_trace import TimeTrace
+
+from .time_trace import TimeTrace
 
 
 @dataclass

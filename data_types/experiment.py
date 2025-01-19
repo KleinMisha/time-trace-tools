@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Callable, Generic, TypeVar
 
-from time_trace import TimeTraceType
+from .time_trace import TimeTraceType
 
 ExperimentType = TypeVar("ExperimentType", bound="Experiment")
 

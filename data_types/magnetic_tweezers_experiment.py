@@ -2,8 +2,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
-from experiment import Experiment
-from magnetic_tweezers_trace import MagneticTweezersTrace
+
+from .experiment import Experiment
+from .magnetic_tweezers_trace import MagneticTweezersTrace
 
 
 @dataclass
