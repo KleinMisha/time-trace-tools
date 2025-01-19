@@ -1,5 +1,5 @@
 """
-Convert raw data from PyTweezer to LabView's format to use older GUIs
+Handling older data taken before pytweezers (in LabView)
 
 -- Misha, October 2024
 """
@@ -58,7 +58,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
     return beads_xyz, t
 
 
-def pytweezer_to_labview(
+def raw_data_pytweezers_to_labview(
     pytweezers_xyz: np.ndarray, t: np.ndarray, path_out: str
 ) -> None:
     """
@@ -123,3 +123,56 @@ def pytweezer_to_labview(
     labview_table.to_csv(path_out, index=True, header=False, sep="\t")
 
     print(f"wrote output data into: {path_out}")
+
+
+def read_sections_file(path: str) -> pd.DataFrame:
+    """
+    read the table with frame numbers and section labels created in LabView
+
+    Args
+    ----
+    path [str]: absolute path to "_sections.txt" as created with LabView
+
+    Returns
+    -----
+    Pandas DataFrame with frame_nr|name as columns. The names are chosen by the user in LabView
+    """
+
+    sections_table = pd.read_table(
+        path,
+        header=None,  # include the first line in the data, not as column names
+        usecols=[1, 2],  # drop the redundant index column
+        names=["frame_nr", "name"],  # set column names
+    )
+    return sections_table
+
+
+def create_sections_from_file_labview(
+    path: str,
+    frame_rate_Hz: float,
+    duration_experiment_s: float,
+) -> dict[tuple[int, int], list[str]]:
+    """
+    use the '<experiment_name>_sections.txt' to read section labels useable on a `TimeTrace` (or `Experiment`)
+
+    Needs user to provide the total duration of the experiment + frame rate to know when the final section ends
+    """
+
+    # read the file
+    sections_table = read_sections_file(path)
+
+    # create the section_labels dictionary
+    start_indices = list(sections_table["frame_nr"])
+    end_indices = start_indices[1:] + [round(frame_rate_Hz * duration_experiment_s)]
+
+    # NOTE: Assumes you added a name for the section when creating the magnet script
+    # TODO: Support if you don't have names provided?
+    section_labels = [str(name) for name in sections_table["name"]]
+
+    section_dictionary = {}
+    for start_index, end_index, label in zip(
+        start_indices, end_indices, section_labels
+    ):
+        new_entry = {(start_index, end_index): [label]}
+        section_dictionary.update(new_entry)
+    return section_dictionary
