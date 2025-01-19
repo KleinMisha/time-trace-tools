@@ -1,12 +1,17 @@
 {
-    // General settings
-    "window.zoomLevel": 1,    
-    "extensions.autoUpdate": "onlyEnabledExtensions",
-    "terminal.integrated.fontSize": 18,
-    
-
     // Workbench settings
     "workbench.colorTheme": "Default Dark+",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground":"#047777"
+    },
+
+    // Editor settings / formating settings 
+    "ruff.importStrategy": "useBundled",
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "editor.foldingImportsByDefault": false,
     "editor.semanticTokenColorCustomizations": {
         "enabled": true,
         "rules": {
@@ -15,20 +20,7 @@
             },
         }
     },
-    "workbench.sideBar.location": "right",
-
-    // Editor settings
-    "ruff.importStrategy": "useBundled",
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "file",
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-    },
-    "editor.fontSize": 22,
-    "files.autoSave": "onFocusChange",
-    "editor.foldingImportsByDefault": false,
+    
 
 
 
