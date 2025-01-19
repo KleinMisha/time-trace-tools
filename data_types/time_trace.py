@@ -23,6 +23,9 @@ class InvalidTimeTraceError(Exception):
 class TimeTrace(ABC):
     """
     Defines a generic time trace.
+    Generally speaking, a time trace is anything that has a time array and any number of equally sized value arrays.
+    traces can have labels assigned to them, or to a part of the trace.
+    ---------
     Abstract base class, so still needs specific implementations
     """
 
@@ -85,6 +88,19 @@ class TimeTrace(ABC):
         else:
             # simply append to the list
             self.section_labels[key].append(label)
+
+    def add_labelled_sections_from_dictionary(
+        self, section_labels: dict[tuple[int, int], list[str]]
+    ) -> None:
+        """
+        Batch add section labels from a dictionary.
+        Calls the `add_labelled_section()` method that will check if this is a new section or an new label
+        for an existing section
+        """
+
+        for (start_index, end_index), label_list in section_labels.items():
+            for label in label_list:
+                self.add_labelled_section(start_index, end_index, label)
 
     def remove_labels_from_section(
         self, start_index: int, end_index: int, labels: list[str]

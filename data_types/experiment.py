@@ -5,13 +5,23 @@ Core class to define a series of experiments (each containing a series of traces
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Callable, Generic
+from typing import Any, Callable, Generic, TypeVar
 
 from time_trace import TimeTraceType
+
+ExperimentType = TypeVar("ExperimentType", bound="Experiment")
 
 
 @dataclass
 class Experiment(ABC, Generic[TimeTraceType]):
+    """
+    Defines a generic experiment as a container of TimeTrace instances.
+    Generally speaking an experiment has a name, and a set of time traces that are loaded
+    from a raw data file.
+    Additionally, experimental conditions can be added as a dictionary to keep track of additional metadata.
+
+    """
+
     ID: str
     traces: list[TimeTraceType] = field(default_factory=list)
     path_to_raw_data: str = ""
@@ -53,6 +63,17 @@ class Experiment(ABC, Generic[TimeTraceType]):
 
     def fetch_traces_by_label(self, label: str) -> list[TimeTraceType]:
         return [trace for trace in self.traces if label in trace.labels]
+
+    def add_common_labelled_section_from_dictionary(
+        self, section_labels: dict[tuple[int, int], list[str]]
+    ) -> None:
+        """
+        Add a batch of section_labels to all member traces.
+        Uses the `add_labelled_section()` method that will check if you are adding a new section or a new label to an
+        existing section
+        """
+        for trace in self.traces:
+            trace.add_labelled_sections_from_dictionary(section_labels)
 
     def __len__(self) -> int:
         return len(self.traces)

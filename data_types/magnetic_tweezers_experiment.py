@@ -4,13 +4,16 @@ from typing import Optional
 import numpy as np
 from experiment import Experiment
 from magnetic_tweezers_trace import MagneticTweezersTrace
-from data_io.raw_mt import read_mt_data
 
 
 @dataclass
 class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
     ref_bead_nr: int = 1
     ref_bead_id: str = "bead_1"
+
+    @property
+    def REF_beads(self) -> list[MagneticTweezersTrace]:
+        return [trace for trace in self.traces if trace.is_REF]
 
     def _create_trace_list_from_raw_data(self) -> list[MagneticTweezersTrace]:
         """
@@ -64,7 +67,3 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
 
     def subtract_reference_bead(self, ref_bead_nr: Optional[int]) -> None:
         raise NotImplementedError
-
-    @property
-    def REF_beads(self) -> list[MagneticTweezersTrace]:
-        return [trace for trace in self.traces if trace.is_REF]
