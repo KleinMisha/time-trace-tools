@@ -46,6 +46,8 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
 
 
         TODO: Now the reference bead will be placed at the end. Maybe adjust this to make it possible to place it back at its original location in the list of traces
+
+        TODO: Adjust, such that you can set a list of reference beads
         """
         new_ref_bead = self.fetch_trace(trace_id=ref_bread_id)
         new_ref_bead.is_REF = True
