@@ -75,5 +75,16 @@ class Experiment(ABC, Generic[TimeTraceType]):
         for trace in self.traces:
             trace.add_labelled_sections_from_dictionary(section_labels)
 
+    def add_batch_labels_from_dictionary(self, labels: dict[str, list[str]]) -> None:
+        """
+        Add a batch of labels to selected member traces
+
+        labels [dict[str, list[str]]]: Dictionary mapping trace IDs to lists of labels to be added to it.
+        """
+
+        for trace_id, label_list in labels.items():
+            trace = self.fetch_trace(trace_id)
+            trace.add_labels(labels=label_list)
+
     def __len__(self) -> int:
         return len(self.traces)
