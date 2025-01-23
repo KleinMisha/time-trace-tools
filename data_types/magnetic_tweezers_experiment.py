@@ -5,6 +5,7 @@ import numpy as np
 
 from .experiment import Experiment
 from .magnetic_tweezers_trace import MagneticTweezersTrace
+from .trace_operations import average_trace, subtract
 
 
 @dataclass
@@ -67,4 +68,21 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
                     self.add_traces(trace_list=[trace])
 
     def subtract_reference_bead(self, ref_bead_nr: Optional[int]) -> None:
+        """
+        reference subtraction. If multiple reference beads are present, their average signal will be used.
+        """
+        # create reference signal (if needed, if there is a single reference bead, the average will return itself)
+        reference_trace = average_trace(trace_list=self.REF_beads, new_id="REF")
+
+        # perform the drift correction / reference subtraction
+        after_ref_subtraction = []
+        for before_trace in self.traces:
+            after_trace = subtract(
+                before_trace, reference_trace, new_id=before_trace.ID
+            )
+            after_ref_subtraction.append(after_trace)
+
+        # replace old trace list with the new one
+        self.traces = after_ref_subtraction
+
         raise NotImplementedError
