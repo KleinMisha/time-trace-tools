@@ -6,8 +6,9 @@ Abstraction is used to define a time trace as anything that has a time array + a
 """
 
 from abc import ABC, abstractmethod
+from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import TypeVar
+from typing import Optional, Type, TypeVar
 
 import numpy as np
 
@@ -120,3 +121,55 @@ class TimeTrace(ABC):
             if values.count(label) == 0
         }
         self.section_labels = after_deletion
+
+    def create_time_trace_for_section(
+        self: TimeTraceType,
+        start_index: int,
+        end_index: int,
+        new_id: Optional[str] = None,
+    ) -> TimeTraceType:
+        """
+        create a new time trace with values based on the given section
+        """
+
+        if not new_id:
+            new_id = ""
+
+        Trace = type(self)
+        section_values = tuple(value[start_index:end_index] for value in self._values)
+        return Trace(
+            ID=new_id,
+            t=self.t[start_index:end_index],
+            labels=[],
+            section_labels={},
+            **dict(zip(self._value_names, section_values)),
+        )
+
+    def _fetch_indices_section_by_label(self, label: str) -> list[tuple[int, int]]:
+        """
+        return the section indices that have a particular label
+        """
+
+        found_sections: list[tuple[int, int]] = []
+        for (start_index, end_index), labels in self.section_labels.items():
+            if label in labels:
+                found_sections.append((start_index, end_index))
+        return found_sections
+
+    def create_sections_by_label(
+        self: TimeTraceType, label: str
+    ) -> list[TimeTraceType]:
+        """
+        creates a new list of  TimeTrace instances. Corresponding values are those of the sections with the specified label.
+
+        new name of this trace will be the specified label
+        """
+
+        trace_sections = []
+        section_indices = self._fetch_indices_section_by_label(label)
+        for start_index, end_index in section_indices:
+            trace_subset = self.create_time_trace_for_section(
+                start_index, end_index, new_id=label
+            )
+            trace_sections.append(trace_subset)
+        return trace_sections
