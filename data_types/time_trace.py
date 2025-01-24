@@ -6,9 +6,8 @@ Abstraction is used to define a time trace as anything that has a time array + a
 """
 
 from abc import ABC, abstractmethod
-from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Optional, Type, TypeVar
+from typing import Optional, TypeVar
 
 import numpy as np
 
