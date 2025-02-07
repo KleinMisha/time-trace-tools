@@ -11,9 +11,12 @@ from typing import IO
 import numpy as np
 import yaml
 from labview_legacy import read_labview
+from pathlib import Path
+
+FilePath = Path | str
 
 
-def read_mt_data(path: str) -> tuple[np.ndarray, np.ndarray]:
+def read_mt_data(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
     """
     loads raw data from magnetic-tweezers (MT)
 
@@ -40,7 +43,7 @@ def read_mt_data(path: str) -> tuple[np.ndarray, np.ndarray]:
 
 
 # pytweezers
-def read_pytweezers(path: str) -> tuple[np.ndarray, np.ndarray]:
+def read_pytweezers(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
     """
     read raw data produced by pytweezers ('traces.npy')
 

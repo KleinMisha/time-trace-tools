@@ -5,9 +5,12 @@ Core class to define a series of experiments (each containing a series of traces
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Callable, Generic, TypeVar
 
 from .time_trace import TimeTraceType
+
+FilePath = Path | str
 
 ExperimentType = TypeVar("ExperimentType", bound="Experiment")
 
@@ -27,7 +30,9 @@ class Experiment(ABC, Generic[TimeTraceType]):
     path_to_raw_data: str = ""
     experimental_conditions: dict[str, Any] = field(default_factory=dict)
 
-    def load_raw_data(self, path: str, data_loader_fn: Callable[[str], Any]) -> None:
+    def load_raw_data(
+        self, path: FilePath, data_loader_fn: Callable[[FilePath], Any]
+    ) -> None:
         """
         Implement how the raw dat is loaded using the `data_loader_fn` method.
 

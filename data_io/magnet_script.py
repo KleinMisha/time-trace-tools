@@ -5,8 +5,13 @@ Reading/parsing the magnet script from PyTweezers
 import numpy as np
 import pandas as pd
 
+# some general imports
+from pathlib import Path
 
-def read_magnet_script_pytweezers(path: str) -> pd.DataFrame:
+FilePath = Path | str
+
+
+def read_magnet_script_pytweezers(path: FilePath) -> pd.DataFrame:
     """
     magnet script is stored as a space separated text file.
     column headers are not included in the file.
@@ -38,7 +43,7 @@ def read_magnet_script_pytweezers(path: str) -> pd.DataFrame:
 
 
 def create_sections_from_file(
-    path: str,
+    path: FilePath,
     frame_rate_Hz: float,
 ) -> dict[tuple[int, int], list[str]]:
     """

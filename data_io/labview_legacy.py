@@ -6,15 +6,18 @@ Handling older data taken before pytweezers (in LabView)
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
+
+FilePath = Path | str
 
 
 # LabView :: Older data is taken before we had pytweezers, but we still want to inspect things the same way
-def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
+def read_labview(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
     """
     read raw data produced by LabView ('.txt')
 
     Args:
-        path (str): absolute path to .txt file
+        path (Path): absolute path to .txt file
 
     Returns:
         np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the columns and frames in the rows
@@ -59,7 +62,7 @@ def read_labview(path: str) -> tuple[np.ndarray, np.ndarray]:
 
 
 def raw_data_pytweezers_to_labview(
-    pytweezers_xyz: np.ndarray, t: np.ndarray, path_out: str
+    pytweezers_xyz: np.ndarray, t: np.ndarray, path_out: FilePath
 ) -> None:
     """
     Converts PyTweezer data to a LabView-compatible format.
@@ -125,7 +128,7 @@ def raw_data_pytweezers_to_labview(
     print(f"wrote output data into: {path_out}")
 
 
-def read_sections_file(path: str) -> pd.DataFrame:
+def read_sections_file(path: FilePath) -> pd.DataFrame:
     """
     read the table with frame numbers and section labels created in LabView
 
@@ -148,7 +151,7 @@ def read_sections_file(path: str) -> pd.DataFrame:
 
 
 def create_sections_from_file_labview(
-    path: str,
+    path: FilePath,
     frame_rate_Hz: float,
     duration_experiment_s: float,
 ) -> dict[tuple[int, int], list[str]]:
