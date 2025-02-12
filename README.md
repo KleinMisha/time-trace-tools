@@ -1,212 +1,18 @@
 # Pytweezer Tools
-Tools for analyzing data from magnetic tweezers, TIRF microscope, or any combination. 
+Modules and packages for analyzing data from magnetic tweezers, TIRF microscope, or any combination. 
+It contains the following core-packages 
 
-## Quick start guide
-The following demonstrates a birds-eye view how to handle data from a magnetic tweezers experiment in `pytweezer-tools`. For the purpose of making this guide consise, it is assumed the data was acquired using `pytweezers`. Rest assure that dealing with data from fluorescence microscopy or older data acquired using LabView is not much more difficult. 
+* `data_io`: Everything you need to read/write data
+* `data_types`: Contains the internal representation of the data. It provides easy ways of representing a set of traces from the tweezers/TIRF. 
+* `data_processing`: **NOT IMPLEMENTED YET** 
+*  `GUIs`: **NOT IMPLEMENTED YET**
+*  `plotting`: **NOT IMPLEMENTED YET**
 
-### loading data 
-The `data_io` directory contains all funtions needed to read/write data. 
-To load data obtained using `pytweezers`
-```python
-from data_io.raw_mt import read_raw_mt
+<span style = "color:hotpink">**NOTE: parts not implemented yet are likely subject to change**</span>
 
-FILEPATH = "path_to_file"
-
-# NOTE: This function also happens to work with data from LabView. 
-bead_positions_xyz, time = read_raw_mt(path = FILEPATH)
-```
-This returns a `bead_position_xyz` array of size `(num_beads, num_frames, 3)` and a `time` array of size `num_frames`. 
-
-### time traces
-<span style = "color:lightblue">**NOTE: some of the code blocks contain spuedocode to make the explanation simplier.**</span>
-
-For convinience, `pytweezer-tools` contains objects of the type `TimeTrace`: simple contianers with a time array and any number of named value arrays (of the same length). It also has an identifier, optional labels and labeled sections. 
-For example, data from magnetic tweezers measurements can be represented as `MagneticTweezerTrace` instances
-```python
-# The following is not the actual implementation. Many things are actually inherited from the `TimeTrace` class and are also available for traces containing fluorescence data 
-class MagneticTweezerTrace(TimeTrace):
-    ID: str     
-    t: NumpyArray
-    x: NumpyArray
-    y: NumpyArray
-    z: NumpyArray 
-
-    # NOTE: time traces also have (optional) labels and labelled sections. 
-    # Ommited here to keep this consise. Feel free to take a look at the actual code (no touchy though ;-) ) 
-
-```
-After loading your data, you can create a `MagneticTweezersTrace` as follows
-```python
-import numpy as np 
-from data_types.magnetic_tweezer_trace import MagneticTweezerTrace
-# here, just demonstrated for the first bead. See below how to deal with the entire set of traces in a more convenient way 
-x = bead_positions_xyz[0, :, 0]
-y = bead_positions_xyz[0, :, 1]
-z = bead_positions_xyz[0, :, 2]
-
-# create the trace 
-trace = MagneticTweezerTrace(t=time, x=x,y=y,z=z, ID="bead_1")
-# You now can find the z-position of the first bead by calling
-print(trace.z)
-```
-We can now add labels to the entire trace, or to specific sections of the trace as follows
-```python
-trace.add_label("pretty trace")
-
-# Say, you want to analyze just the start of the trace for some reason
-start_section = 0 
-end_section = 100
-trace.add_section(start_frame_number=start_section, end_frame_number=end_section, label="before adding reagents")
-
-# This will store the section in a dictionary with a key of (start_frame_number, end_frame_number) and value "before adding reagents" (i.e. the chosen label).
-
-# Process just a part of the trace
-
-def your_very_important_function(z: NumpyArray, t: NumpyArray) -> NumpyArray:
-    '''calculate something based on the heigth of a bead and return a new array'''
-
-for (section,label) in trace.sections.items():
-    if label == "before adding reagents":
-        ''' 
-        retreive the important part of the trace and apply your very important function to it
-        '''
-```
-
-Time traces also have some convenience methods available for adding/removing labes, altering labels, adding/removing sections, accessing the section, quickly viewing all sections of a particular label, etc. Also, general arithmatic for shifting, adding, and averaging traces are available. 
-<span style="color:lightblue"> **NOTE:** see the `README.md` in the `data_types` directory for all the available functions.  </span>
-
-An `Experiment` deals with a data set with multiple traces. For a typical magnetic tweezers experiment, create a `MagneticTweezersExperiment` 
-```python 
-#NOTE: Similar to the `MagneticTweezersTrace` demonstrated above, many things demonstrated here for a   `MagneticTweezersExperiment` can be used with any implementation of an `Experiment`
-
-from data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
-from data_io.raw_mt import read_raw_mt
-# create an experiment with some descriptions. 
-# At minimum, it should have an identifier. 
-# Other information can be provided later. 
-mt_experiment = MagneticTweezersExperiment(
-    ID="simple identifier. For instance '500 µM NTP'",
-    
-    # A dictionary with any information you want to use to specify the experimental conditions. This is optional, not need to instanciate an Experiment. 
-    experimental_conditions={
-        "protein_X_uM" : 1.,
-        "protein_Y_uM" : 2.,
-        "NTP_uM": 500.,
-        "force_pN": 25.,
-        ...
-    }
-    ref_bead_nr = 1 # say, the first bead is the reference bead
-)
-
-# load the raw data. 
-FILEPATH = "path to raw data"
-mt_experiment.load_raw_data(path=FILEPATH, use_method=read_raw_mt) # will store the raw data as class attribute
-
-# create the series of `MagneticTweezerTrace` instances 
-mt_experiment.create_traces_from_raw_data()
-
-# traces are stored in a list with objects of type MagneticTweezerTrace 
-mt_experiment.traces : list[MagneticTweezerTrace]
+The software is designed to follow the natural flow of performing data analysis 
 
 
-# perform reference substraction 
-mt_experiment.substrace_reference_bead() #NOTE: you can use this function to change reference bead 
-
-# access the 50th trace for further inspection (just an example)
-trace_50 = mt_experiment.fetch_trace(trace_id="trace_50") 
-
-```
-Now you can access functions to assign a label to a (set of) trace(s), or to a part of a trace, simple access to all traces with a particular label, or access a particular part of all traces. 
-For some of the specific implementations (for particular assays) there might be even functions that can set the experiment name from the filename for instance. 
-
-<span style="color:lightblue">NOTE: See the `README.md` inside `data_types` for all available methods and their functions. There are much more than demonstrated in this bare bones example</span>
-
-Typically the `MagneticTweezerExperiment` class will be your entry point for dealing with experimental data. 
-To conveniently deal with a series of `Experiments`, create an `ExperimentSeries`. 
-For typical magnetic tweezer experiments 
-
-```python 
-from data_types.magnetic_tweezers_experiment_series import MagneticTweezerExperimentSeries
-from data_types.magnetic_tweezers_experiment import MagneticTweezerExperiment
-
-
-# example 1: repeat experiments. Starting from the individual experiments
-
-experiment_1 = MagneticTweezersExperiment(ID='first experiment')
-experiment_2 = MagneticTweezersExperiment(ID='second experiment')
-
-repeat_experiments = MagneticTweezerExperimentSeries(experiments=[experiment_1, experiment_2])
-
-# oops, forgot to add one more repeat 
-experiment_3 = MagneticTweezersExperiment(ID='third experiment')
-repeat_experiments.add_experiment(experiment_3)
-
-# example 2: Use the filenames to the raw data sets 
-FILEPATHS = ["path/to/file 1", "path/to/file 2"]
-EXPERIMENTS = ["first", "second", "third"]
-repeat_experiments = MagneticTweezersExperimentSeries()
-repeat_experiments.create_experiments_from_raw_data(paths = FILEPATHS, ID_list = EXPERIMENTS)
-
-# Now you can manually create the traces for the individual experiments as shown above. NOTE: For convenience this is done internally, so in most cases don't need to call yourself. 
-repeat_experiments.create_traces()
-
-
-
-# example 3: Sweep NTP concentration 
-
-COMMON_CONDITIONS = {"force":25.,  "protein_concentration": 0.2} 
-
-CONCENTRATION_SWEEP = {'[NTP]':[0., 10., 100., 1000.]}
-FILEPATHS: list[str] = []
-
-concentration_sweep = MagneticTweezersExperimentSeries(paths=FILEPATHS)
-# automatically take care of creating instances of `MagneticTweezerExperiment`, with their respective IDs based on the NTP concentration. 
-concentration_sweep.create_experiments_from_sweep(dependent_variable=CONCENTRATION_SWEEP, common_conditions=COMMON_CONDITIONS)
-```
-<span style="color:lightblue">NOTE: See the `README.md` inside `data_types` for all available methods and their functions. There are much more than demonstrated in this bare bones example</span>
-
-
-
-### Process time traces 
-Having created your `TimeTrace`, `Experiment`, or `ExperimentSeries` data processing is handled by a `DataProcessor` that can apply methods to traces 
-<span style="color:yellow">NOTE: THINK THIS PART THROUGH MORE. MAINLY WANT FAST WAYS OF INSTANTIATING PIPELINES FOR FREQUENTLY PERFORMED EXPERIMENTAL ASSAYS</span>
-
-```python
-from typing import Callable 
-class DataProcessor:
-    methods: list[Callable]
-    traces: list[TimeTrace]
-
-    def register_method(function: Callable) --> None:
-    def unregister_method(function: Callable) --> None:
-
-    def apply() --> None: 
-        '''
-        Applies the set of register methods to all the supplied traces
-        '''
-
-```
-
-### Output the data 
-We again turn to the `data_io` package
-<span style="color:yellow">NOTE: Add later</span>
-
-Convenience methods for plotting subsets of traces 
-```python
-from plotting import plot_mt_trace,
-
-???
-```
-
-View data within a GUI. For example, see.... 
-```
-```
-<span style="color:lightblue">NOTE: See below for tips to make your own GUI. The `gui` library has a set of plug-and-play components you can use to speed up the process of making a gui for yourself. </span>
-
-
-
-## More detailed guide
-At its core, `pytweezer-tools` contains the following building blocks: 
 ```mermaid
 graph TD;
     A[Reading data 
@@ -227,7 +33,150 @@ graph TD;
 
     A -->B-->C-->D
 ```
-<span style = "color:lightblue">**NOTE  1:**</span> Individual sub-libraries have their own `README.md` file. 
+More details on software design can be found in the notes for developers. 
+In a nutshell, these four core components (1. reading/writing data, 2. internal representations of data, 3. manipulating data, and 4. external representation of the data (aka. exporting files, plots, GUIs)) are intended to remain modular. 
+The developer/contributor notes detail how this is achieved. 
+
+<span style = "color:lightblue"> Individual packages (directories) have their own `README.md` detailing their contents. </span>
+
+
+## Installation 
+#### the code base 
+Using the `conda` environment.
+Use the `environment.yml` file to create a new environment with all requirements satisfied. 
+```bash
+conda env create --file environment.yml 
+``` 
+
+> <span style = "color:hotpink"> _I have explored using alternative package managers as these have more elegant solutions for managing dependencies. More human-readable file listing their dependencies, for instance. However, these all work by installing a virtual environment within the same folder the code is placed in. Given we normally work by importing this code inside any other folder we are working on our projects (with their own code that might use `pytweezer-tools`), I have thus far not found a more suitable solution to using `conda`._  
+--Misha </span>
+
+#### VS-code setup
+For VS-code users, this repository contains a `.vscode` directory. It has some handy settings and includes some recommended extensions. You should be able to install these with one click of the button in the Marketplace. There should be a button to instantly install all the recommended extensions. 
+
+
+
+
+## Quick start guide
+<span style = "color:lightgreen"> Details will follow. </span>
+
+The following demonstrates a birds-eye view how to handle data from a magnetic tweezers experiment in `pytweezer-tools`. For the purpose of making this guide consise, it is assumed the data was acquired using `pytweezers`. Rest assure that dealing with data from fluorescence microscopy or older data acquired using LabView is not much more difficult. 
+
+### loading data 
+The `data_io` directory contains all functions needed to read/write data. 
+To load data obtained using `pytweezers`
+```python
+from data_io.raw_mt import read_raw_mt
+
+FILEPATH = "path_to_file"
+
+# NOTE: This function also happens to work with data from LabView. 
+bead_positions_xyz, time = read_raw_mt(path = FILEPATH)
+```
+This returns a `bead_position_xyz` array of size `(num_beads, num_frames, 3)` and a `time` array of size `num_frames`. 
+
+### time traces
+<span style = "color:lightgreen">**NOTE: some of the code blocks contain pseudocode to make the explanation simpler. For instance, the example below is not the actual implementation of `MagneticTweezersTrace`. Many things are actually inherited from the `TimeTrace` class and are also available for traces containing fluorescence data 
+**</span>
+
+For convenience, `pytweezer-tools` contains objects of the type `TimeTrace`: simple containers with a time array and any number of named value arrays (of the same length). It also has an identifier, optional labels and labeled sections. 
+For example, data from magnetic tweezers measurements can be represented as `MagneticTweezerTrace` instances.
+
+To represent full datasets, we use the `Experiment`: containers for multiple `TimeTrace` instances. For example, data from magnetic tweezers measurements can be represented using `MagneticTweezersTrace` and `MagneticTweezersExperiment`. 
+
+The following code-snippet shows an example of 
+* loading raw data 
+* doing some cleanup --> set the reference bead 
+* subtract the reference signal (drift correction)
+
+```python
+from data_io.raw_mt import read_mt_data
+from data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
+from pathlib import Path 
+
+# the stuff you will adjust
+REF_BEAD_NUMBER = 1 # if you used the last bead, adjust accordingly 
+RAW_FILE_PATH = Path("path/to/file") # also works with a regular string, but this just makes it easy to see 
+
+
+# Using the built-in convenience methods available, we now simply instantiate an Experiment
+mt_exp = MagneticTweezersExperiment(
+    ID="force calibration", ref_bead_nr=REF_BEAD_NUMBER
+)
+
+# Now load the data and let pytweezers-tools handle the creation of MagneticTweezersTrace objects
+mt_exp.load_raw_data(path=RAW_FILE_PATH, data_loader_fn=read_mt_data)
+mt_exp.create_traces_from_raw_data() 
+
+# Let's subtract the reference bead
+mt_exp.set_reference_bead(f"bead_{REF_BEAD_NUMBER}") 
+mt_exp.subtract_reference_bead()
+
+# Now let's check how many traces are in this experiment
+print(len(mt_exp))
+```
+
+To plot all the available traces, simply access `t` and `x`,`y`,or `z` on your traces (now stored as part of the `Experiment`). 
+```python 
+import matplotlib.pyplot as plt 
+
+#continuing from the previous
+for trace in mt_exp.traces:
+    #NOTE: Chose here to use the z-position of the bead, but could've done either x- or y- with the exact same syntax 
+    plt.plot(trace.t, trace.z)
+```
+
+There are several convenience functions available (on both the `TimeTrace` and `Experiment` level) for adding/removing labels (to the whole trace or to sections thereof)
+```python
+# Adding a labels to a particular traces 
+trace_1 = mt_exp.fetch_trace(trace_id="Bead_6")
+trace_1.add_labels(labels=["activity", "use for nice figure"])
+
+trace_2 = mt_exp.fetch_trace(trace_id="Bead_123")
+trace_2.add_labels(labels=["activity"])
+
+
+# Say, you already did this prior. To get all the traces with a particular label 
+
+# returns a list equal to [trace_1, trace_2] (it fetches both "Bead_6" and "Bead_123")
+traces_w_activity = mt_exp.fetch_traces_by_label(label = "activity")
+
+# returns a list with only [trace_1] (it fetches only "Bead_6")
+nice_traces = mt_exp.fetch_traces_by_label(label = "use for nice figure")
+
+
+# to indicate what part of the trace contained the activity seen in trace 123
+trace_2.add_labelled_section( start_index: int, end_index: int, label: str) 
+
+# you can now access the section labels and print it to screen 
+print(trace_2.section_labels) 
+
+# Alternatively, create a new MagneticTweezerTrace representing just the desired part of the trace 
+activity_only = trace_2.create_time_trace_for_section(
+    start_index: int,
+    end_index: int,
+    new_id: Optional[str] = None,
+    )
+# now, plot just this part of the trace 
+plt.plot(activity_only.t, activity_only.z)
+```
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+# DUMMY STUFF FOR NOW 
 
 
 <span style = "color:lightblue">**NOTE  2:**</span> this follows the natural workflow for analysing data from `pytweezers`. These core elements are intended to keep decoupled from each other. That is:
@@ -235,41 +184,6 @@ graph TD;
 * If you want to add a new kind of output file, you should only have to add a reading and writing function in `data_io`. The data structures `TimeTrace`, `Experiment`, etc. are not allowed to know the specific implementation used to write the data. In stead, we supply the trace as an argument to the writing function (_or vice versa if appropriate_). 
 
 This principle is called **_'dependency injection'_** and essentially prevents us from writing code that has extensive checks for "if the data is from the magnetic tweezers, do A. if the code is from the TIRF, do B." Adding a new type of data is then as easy as defining this new class. No need to expand all these `if else` cases in the data processing functions, the reading/writing, etc. 
-
-
-### Data reading (and writing)
-Functions to read raw data from magnetic tweezers, TIRF microscope, etc. 
-```python
-from data_io.raw_mt import read_raw_mt
-
-FILEPATH = "path_to_file"
-
-bead_positions_xyz, time = read_raw_mt(path = FILEPATH)
-```
-Legacy support for data acquired using `LabVIEW` is also available. 
-See readme for more details. 
-
-
-### Data types
-<span style = "color:lightblue">**NOTE: some of the code blocks contain spuedocode to make the explanation simplier.**</span>
-
-Most of the data we encounter are forms of time traces. A generic time trace has a time array and any number of additional value arrays. 
-
-```python
-class TimeTrace:
-    time : NumPyArray
-    **values : dict[str, NumPyArray]
-
-    def _validate_time_trace():
-        ''' a time trace must have an equal number of datapoints and time points '''
-
-    def __len()__:
-        return len(self.time)
-```
-Here we defined a generic `TimeTrace` class to represent anything that has some array named `time` and any additional named arrays of similar length.
-
-
-
 
 
 
@@ -304,84 +218,5 @@ The following were kept in mind as key requirements in choosing the structure fo
     In stead, the concept of 'dependency injection' is used. 
     A `DataProcessor` object gets a `TimeTrace` object as its input and does not use any information regarding implementation details of the `TimeTrace` object. 
     Now, with hardly any more work the code can now work with any kind of time trace. Also, adding more types of time traces can be done without altering any of the functions used to process the data. 
-
-
-
-
-
-
-
-
-
-
-
-
-(NOTE: name is chosen as a reference to the `pytweezers` project, even though it does not explicitly depend on it)
-## Quick overview 
-<span style="color:red"> add details into some more detailed manual?</span>.
-
-Code snippets show simplified code /speudocode. 
-### data representations 
-Most types of data we use are a kind of `TimeTrace`, which is defined as anything that has both a time array and any number of value arrays. 
-
-```python
-class TimeTrace:
-    time: NumpyArray 
-    **values: dict[str, NumpyArray]
-
-    def _validate_timetrace():
-        ''' checks if all the lengths are correct ''' 
-
-    def __len()__:
-        ''' if you call the len() method, you want it to return the number of time points. This should be equal to the number of elements in the value arrays. ''' 
-
-    
-    def get_values():
-        ''' return the values ''' 
-
-```
-
-The code recognizes `TimeTraces` as a type. Examples of members are 
-a trace from the magnetic tweezers 
-
-```python
-class MagneticTweezersTrace(TimeTrace):
-    x : NumpyArray
-    y : NumpyArray 
-    z : NumpyArray 
-```
-or a trace from the TIRF microscope
-```python
-class OneColorFluorescenceTrace(TimeTrace):
-    intensity: NumpyArray 
-
-class RedGreenFluorescenceTrace(TimeTrace):
-    red: NumpyArray
-    green: NumpyArray 
-```
-
-Some examples made for convinience: 
-```python
-class FRET(TimeTrace):
-    donor: NumpyArray
-    acceptor: NumpyArray 
-
-    def calculate_fret_efficiency() -> NumpyArray:
-        ''' calculates acceptor/(donor + acceptor) '''
-
-
-
-class MT_TIRF_Trace():
-    mt_trace : MagneticTweezerTrace 
-    tirf_trace: FluorescenceTrace 
-```
-
-
-## Installation Guide 
-
-## Contributing
-
-## License
-For open source projects, say how it is licensed.
 
 

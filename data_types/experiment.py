@@ -27,7 +27,7 @@ class Experiment(ABC, Generic[TimeTraceType]):
 
     ID: str
     traces: list[TimeTraceType] = field(default_factory=list)
-    path_to_raw_data: str = ""
+    path_to_raw_data: FilePath = Path("")
     experimental_conditions: dict[str, Any] = field(default_factory=dict)
 
     def load_raw_data(
