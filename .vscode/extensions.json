@@ -8,7 +8,8 @@
         "bierner.markdown-mermaid",
         "tamasfe.even-better-toml",
         "aaron-bond.better-comments",
-        
+        "gitlab.gitlab-workflow",
+        "streetsidesoftware.code-spell-checker"
     ]
 
 

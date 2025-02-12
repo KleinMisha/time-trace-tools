@@ -1,17 +1,24 @@
 ```mermaid
-flowchart TD;
-    A[Start] --> B[Process 1];
-    B --> C[Process 2];
-    C --> D[End];
+classDiagram
+    class Animal {
+        +name: string
+        +age: int
+        +makeSound(): void
+    }
 
+    class Dog {
+        breed: string
+        bark(): void
+        
+    }
 
-sequenceDiagram;
-    participant Client
-    participant Server
-    Client->>Server: Register user
-    activate Server
-    Server-->>Client: User already exists.
-    deactivate Server
+    class Cat {
+        +color: string
+        +meow(): void
+    }
+
+    Animal <|-- Dog
+    Animal <|-- Cat
 ```
 
 

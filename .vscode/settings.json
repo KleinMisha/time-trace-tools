@@ -1,19 +1,41 @@
 {
-    // General settings
-    "window.zoomLevel": 3,    
-    "extensions.autoUpdate": "onlyEnabledExtensions",
-    
-
     // Workbench settings
-    "workbench.colorTheme": "Default Dark Modern",
-    "workbench.sideBar.location": "right",
+    "workbench.colorTheme": "Default Dark+",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground":"#047777"
+    },
 
-    // Editor settings
+    // Editor settings / formating settings 
     "ruff.importStrategy": "useBundled",
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.fontSize": 20
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "editor.foldingImportsByDefault": false,
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true,
+        "rules": {
+            "*.typeHint": {
+                "foreground": "#4EC9B0", // Customize this color
+            },
+        }
+    },
+    
+
+
+
+    // Python/ Pylance settings
+    "python.analysis.typeCheckingMode": "basic",
+
+
+    // Spell checker settings
+    "cSpell.language": "en-US",
+    "cSpell.ignoreWords": ["ndarray", "labview", "pytw", "pytweezers"],
+
+
+
+    
+    
 
     
 
