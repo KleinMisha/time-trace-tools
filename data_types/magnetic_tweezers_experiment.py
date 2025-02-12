@@ -86,5 +86,3 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
 
         # replace old trace list with the new one
         self.traces = after_ref_subtraction
-
-        raise NotImplementedError
