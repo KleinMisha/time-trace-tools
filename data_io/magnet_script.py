@@ -49,6 +49,10 @@ def create_sections_from_file(
     """
     create dictionary with sections applicable to all traces of a given experiment
     use the read_magnet_script_pytweezers() function to generate input table
+
+    # NOTE: section labels will now (by default) become the 'comments' written into the magnet script file.
+    # TODO: some more convenient default section name. Maybe some combination of height and rotation?
+    # TODO: Tricky to make some convention that is most convenient for all types of experiments. Or is there an easy way?  section (typically has the [F=... pN] written into it)
     """
     # load/parse the magnet script
     magnet_script_table = read_magnet_script_pytweezers(path)
@@ -62,7 +66,8 @@ def create_sections_from_file(
     end_indices = [round(frame_rate_Hz * time) for time in end_times]
 
     # create dictionary
-    # use 'comments' to name the sections
+    # TODO: some more convenient default section name. Maybe some combination of height and rotation?
+    # TODO: Tricky to make some convention that is most convenient for all types of experiments. Or is there an easy way?
     section_labels = [comment for comment in magnet_script_table["comments"]]
 
     section_dictionary = {}

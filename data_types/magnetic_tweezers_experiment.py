@@ -49,13 +49,6 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
 
         TODO: Adjust, such that you can set a list of reference beads
         """
-        # set the new reference bead (most of the code deals with handling the previous reference bead(s))
-        new_ref_bead = self.fetch_trace(trace_id=ref_bread_id)
-        new_ref_bead.is_REF = True
-
-        # replace the original with the new one that is now set as reference trace
-        self.remove_trace(trace_id=ref_bread_id)
-        self.add_traces(trace_list=[new_ref_bead])
 
         # find and remove old reference beads
         old_ref_beads = self.REF_beads
@@ -70,6 +63,14 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
                     trace.is_REF = False
                     self.remove_trace(trace_id=trace.ID)
                     self.add_traces(trace_list=[trace])
+
+        # set the new reference bead (most of the code deals with handling the previous reference bead)
+        # replace the original with the new one that is now set as reference trace
+
+        new_ref_bead = self.fetch_trace(trace_id=ref_bread_id)
+        new_ref_bead.is_REF = True
+        self.remove_trace(trace_id=ref_bread_id)
+        self.add_traces(trace_list=[new_ref_bead])
 
     def subtract_reference_bead(self) -> None:
         """

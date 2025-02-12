@@ -6,12 +6,13 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 """
 
 import os
+from pathlib import Path
 from typing import IO
 
 import numpy as np
 import yaml
-from labview_legacy import read_labview
-from pathlib import Path
+
+from .labview_legacy import read_labview
 
 FilePath = Path | str
 
