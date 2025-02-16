@@ -71,7 +71,7 @@ def read_pytweezers(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
         f.seek(curpos, 0)
         return curpos == file_size
 
-    def _read_npy_in_chunks(path: str) -> np.ndarray:
+    def _read_npy_in_chunks(path: FilePath) -> np.ndarray:
         """
         load in the original data as stored by pytweezer
         """
