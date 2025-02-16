@@ -6,6 +6,7 @@ These are time traces with x,y, and z position information of the bead.
 from dataclasses import dataclass, field
 
 import numpy as np
+from numpy.typing import NDArray
 
 from .time_trace import TimeTrace
 
@@ -15,13 +16,15 @@ class MagneticTweezersTrace(TimeTrace):
     # A slight bit disappointing I cannot just define a new variable here without default value
     # At least this seems like a small compromise to make, user-experience wise.
     # i.e. Always call it as MagneticTweezersTrace(ID,t , x=..., y=..., z=...)
-    x: np.ndarray = field(default_factory=lambda: np.array([]))
-    y: np.ndarray = field(default_factory=lambda: np.array([]))
-    z: np.ndarray = field(default_factory=lambda: np.array([]))
+    x: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    y: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    z: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
     is_REF: bool = False
 
     @property
-    def _values(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def _values(
+        self,
+    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation

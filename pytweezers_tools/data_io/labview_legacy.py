@@ -4,15 +4,17 @@ Handling older data taken before pytweezers (in LabView)
 -- Misha, October 2024
 """
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
+from numpy.typing import NDArray
 
 FilePath = Path | str
 
 
 # LabView :: Older data is taken before we had pytweezers, but we still want to inspect things the same way
-def read_labview(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
+def read_labview(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """
     read raw data produced by LabView ('.txt')
 
@@ -20,8 +22,8 @@ def read_labview(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
         path (Path): absolute path to .txt file
 
     Returns:
-        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the columns and frames in the rows
-        np.ndarray: The time in seconds
+        NDArray[np.float64]: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the columns and frames in the rows
+        NDArray[np.float64]: The time in seconds
 
     Notes:
         reads the original .txt as a table, renames the columns to more easily group together (x,y,z) of the same column
@@ -62,7 +64,7 @@ def read_labview(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
 
 
 def raw_data_pytweezers_to_labview(
-    pytweezers_xyz: np.ndarray, t: np.ndarray, path_out: FilePath
+    pytweezers_xyz: NDArray[np.float64], t: NDArray[np.float64], path_out: FilePath
 ) -> None:
     """
     Converts PyTweezer data to a LabView-compatible format.
@@ -91,7 +93,7 @@ def raw_data_pytweezers_to_labview(
     col_nr = 0
     for bead_nr in range(number_beads):
         for axes in range(3):
-            # the collumn in the new array is "the bead number, or the the bead number +1 (for y) or +2 (for z)"
+            # the column in the new array is "the bead number, or the the bead number +1 (for y) or +2 (for z)"
             # the input data will have the x,y,z positions stored in different axes of the 3D array
             labview_xyz[:, col_nr] = pytweezers_xyz[bead_nr, :, axes]
             col_nr += 1

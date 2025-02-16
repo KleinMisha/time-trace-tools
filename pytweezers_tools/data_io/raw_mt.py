@@ -11,13 +11,14 @@ from typing import IO
 
 import numpy as np
 import yaml
+from numpy.typing import NDArray
 
 from .labview_legacy import read_labview
 
 FilePath = Path | str
 
 
-def read_mt_data(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
+def read_mt_data(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """
     loads raw data from magnetic-tweezers (MT)
 
@@ -25,8 +26,8 @@ def read_mt_data(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
         path (str) : absolute path to data file
 
     Returns:
-        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
-        np.ndarray: The time in seconds
+        NDArray[np.float64]: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
+        NDArray[np.float64]: The time in seconds
 
     Notes:
         uses file extension to check if the data has been taken using PyTweezers or LabView
@@ -44,7 +45,7 @@ def read_mt_data(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
 
 
 # pytweezers
-def read_pytweezers(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
+def read_pytweezers(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """
     read raw data produced by pytweezers ('traces.npy')
 
@@ -52,8 +53,8 @@ def read_pytweezers(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
         path (str): absolute path to .npy file
 
     Returns:
-        np.ndarray: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
-        np.ndarray: The time in seconds
+        NDArray[np.float64]: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
+        NDArray[np.float64]: The time in seconds
 
     Notes:
         will use the config.yaml file stored in the same folder to infer the frame rate
@@ -71,9 +72,9 @@ def read_pytweezers(path: FilePath) -> tuple[np.ndarray, np.ndarray]:
         f.seek(curpos, 0)
         return curpos == file_size
 
-    def _read_npy_in_chunks(path: FilePath) -> np.ndarray:
+    def _read_npy_in_chunks(path: FilePath) -> NDArray:
         """
-        load in the original data as stored by pytweezer
+        load in the original data as stored by pytweezers
         """
         with open(path, "rb") as s:
             header = np.load(s, allow_pickle=True)

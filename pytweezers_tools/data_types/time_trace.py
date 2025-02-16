@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import Optional, TypeVar
 
 import numpy as np
+from numpy.typing import NDArray
 
 TimeTraceType = TypeVar("TimeTraceType", bound="TimeTrace")
 
@@ -30,13 +31,13 @@ class TimeTrace(ABC):
     """
 
     ID: str
-    t: np.ndarray
+    t: NDArray[np.float64]
     labels: list[str] = field(default_factory=list)
     section_labels: dict[tuple[int, int], list[str]] = field(default_factory=dict)
 
     @property
     @abstractmethod
-    def _values(self) -> tuple[np.ndarray, ...]:
+    def _values(self) -> tuple[NDArray[np.float64], ...]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation

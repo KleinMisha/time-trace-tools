@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import numpy as np
+from numpy.typing import NDArray
 
 from .experiment import Experiment
 from .magnetic_tweezers_trace import MagneticTweezersTrace
@@ -23,7 +23,7 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
         Make some standard identifiers
         """
         trace_list = []
-        bead_positions_xyz: np.ndarray  # Now Pylance understands .shape is a thing
+        bead_positions_xyz: NDArray  # Now Pylance understands .shape is a thing
         bead_positions_xyz, time = self._raw_data
         num_beads, _, _ = bead_positions_xyz.shape
         for index in range(num_beads):
