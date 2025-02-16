@@ -1,6 +1,8 @@
 # Pytweezer Tools
 Modules and packages for analyzing data from magnetic tweezers, TIRF microscope, or any combination. 
 It contains the following core-packages 
+<span style = "color:hotpink">**see CHANGELOG.md for release updates per version**</span>
+
 
 * `data_io`: Everything you need to read/write data
 * `data_types`: Contains the internal representation of the data. It provides easy ways of representing a set of traces from the tweezers/TIRF. 
@@ -8,7 +10,7 @@ It contains the following core-packages
 *  `GUIs`: **NOT IMPLEMENTED YET**
 *  `plotting`: **NOT IMPLEMENTED YET**
 
-<span style = "color:hotpink">**NOTE: parts not implemented yet are likely subject to change**</span>
+<span style = "color:lightgreen">**NOTE: parts not implemented yet are likely subject to change**</span>
 
 The software is designed to follow the natural flow of performing data analysis 
 
@@ -41,17 +43,26 @@ The developer/contributor notes detail how this is achieved.
 
 
 ## Installation 
-#### the code base 
-Using the `conda` environment.
-Use the `environment.yml` file to create a new environment with all requirements satisfied. 
+### the code base 
+#### using `conda`
+Using the `conda` environment. Dependencies are listed in the `environment.yml` file
 ```bash
 conda env create --file environment.yml 
+conda activate pytw_tools
 ``` 
 
-> <span style = "color:hotpink"> _I have explored using alternative package managers as these have more elegant solutions for managing dependencies. More human-readable file listing their dependencies, for instance. However, these all work by installing a virtual environment within the same folder the code is placed in. Given we normally work by importing this code inside any other folder we are working on our projects (with their own code that might use `pytweezer-tools`), I have thus far not found a more suitable solution to using `conda`._  
---Misha </span>
 
-#### VS-code setup
+#### using `uv`
+Dependencies, and other project details, are listed in the `pyproject.toml` file. Dependency managers like `uv` use the `uv.lock` file to specify specific versions of packages used. Once `uv` is installed, you can setup your .venv (will be created inside your current folder) with all requirements installed using
+```bash 
+uv venv create
+uv pip sync
+```
+
+
+
+
+### VS-code setup
 For VS-code users, this repository contains a `.vscode` directory. It has some handy settings and includes some recommended extensions. You should be able to install these with one click of the button in the Marketplace. There should be a button to instantly install all the recommended extensions. 
 
 
