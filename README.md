@@ -228,12 +228,9 @@ The following were kept in mind as key requirements in choosing the structure fo
     Further explanation is provided below. 
     Automated code formating using the `ruff` tool (VScode extension added as recommended)
 
-    Lower barrier for adding new code: Minimize coupling between different parts of the code (if not possible to completely eleminate)
+    Lower barrier for adding new code: Minimize coupling between different parts of the code (if not possible to completely eliminate)
     subdirectories are intentionally made to be python libraries (i.e. containing an `__init__.py` file)
-    This is done as an additional insentive to make code as portable as possible. For example, a set of functions used to filter signals should be able to be used as a stand alone library in some unrelated project. 
-    Also, users wanting to make code just pertaining to their experiments can add their own folder/library in this way. 
-    This way the 'less optimally written code' will hopefully be contained within this folder. 
-
+    This is done as an additional incentive to make code as portable as possible. For example, your code might only need the `data_io` part of this library. 
 
 3. **Make the code as modular as possible** 
 
