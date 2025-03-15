@@ -65,13 +65,30 @@ uv pip sync
 ### VS-code setup
 For VS-code users, this repository contains a `.vscode` directory. It has some handy settings and includes some recommended extensions. You should be able to install these with one click of the button in the Marketplace. There should be a button to instantly install all the recommended extensions. 
 
+### UV package manager 
+Following `uv`'s [installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+
+MacOS / Linux users can either 
+```zsh
+curl -LsSf https://astral.sh/uv/install.sh | less
+```
+which will download and run the installer from their website, or use `homebrew` (it was available on my MacOS, cannot remember installing this myself, but even that is easy)
+
+```zsh
+brew install uv
+```
+
+Windows users do the equivalent of the first option
+```powershell
+powershell -c "irm https://astral.sh/uv/install.ps1 | more"
+```
 
 
 
 ## Quick start guide
 <span style = "color:lightgreen"> Details will follow. </span>
 
-The following demonstrates a birds-eye view how to handle data from a magnetic tweezers experiment in `pytweezer-tools`. For the purpose of making this guide consise, it is assumed the data was acquired using `pytweezers`. Rest assure that dealing with data from fluorescence microscopy or older data acquired using LabView is not much more difficult. 
+The following demonstrates a birds-eye view how to handle data from a magnetic tweezers experiment in `pytweezer-tools`. For the purpose of making this guide consise, it is assumed the data was acquired using `pytweezers`. Rest assure that dealing with data from fluorescence microscopy or older data acquired using LabView is accounted for and is not any more difficult. 
 
 ### loading data 
 The `data_io` directory contains all functions needed to read/write data. 
@@ -87,13 +104,12 @@ bead_positions_xyz, time = read_raw_mt(path = FILEPATH)
 This returns a `bead_position_xyz` array of size `(num_beads, num_frames, 3)` and a `time` array of size `num_frames`. 
 
 ### time traces
-<span style = "color:lightgreen">**NOTE: some of the code blocks contain pseudocode to make the explanation simpler. For instance, the example below is not the actual implementation of `MagneticTweezersTrace`. Many things are actually inherited from the `TimeTrace` class and are also available for traces containing fluorescence data 
-**</span>
+<span style = "color:lightgreen">**NOTE: some of the code blocks contain pseudocode to make the explanation simpler. For instance, the example below is not the actual implementation of `MagneticTweezersTrace`. Many things are actually inherited from the `TimeTrace` class and are also available for traces containing fluorescence data**</span>
 
 For convenience, `pytweezer-tools` contains objects of the type `TimeTrace`: simple containers with a time array and any number of named value arrays (of the same length). It also has an identifier, optional labels and labeled sections. 
 For example, data from magnetic tweezers measurements can be represented as `MagneticTweezerTrace` instances.
 
-To represent full datasets, we use the `Experiment`: containers for multiple `TimeTrace` instances. For example, data from magnetic tweezers measurements can be represented using `MagneticTweezersTrace` and `MagneticTweezersExperiment`. 
+To represent full datasets, we use the `Experiment` class: containers for multiple `TimeTrace` instances. For example, data from magnetic tweezers measurements can be represented using `MagneticTweezersTrace` and `MagneticTweezersExperiment`. 
 
 The following code-snippet shows an example of 
 * loading raw data 
@@ -107,7 +123,7 @@ from pathlib import Path
 
 # the stuff you will adjust
 REF_BEAD_NUMBER = 1 # if you used the last bead, adjust accordingly 
-RAW_FILE_PATH = Path("path/to/file") # also works with a regular string, but this just makes it easy to see 
+RAW_FILE_PATH = Path("path/to/file") # also works with a regular string, but using the more modern Python solution.
 
 
 # Using the built-in convenience methods available, we now simply instantiate an Experiment
@@ -191,7 +207,7 @@ plt.plot(activity_only.t, activity_only.z)
 
 
 <span style = "color:lightblue">**NOTE  2:**</span> this follows the natural workflow for analysing data from `pytweezers`. These core elements are intended to keep decoupled from each other. That is:
-* If you want to add a new kind of data type (say a three color fluorescence trace). You should only have to define this new type. Functions acting on time traces are not allowed to depend on the specifics of a fluorescence trace (say, the number of colors it has). In stead, we supply the `TimeTrace` or `Experiment` as inpout to the `DataProcessor`.  
+* If you want to add a new kind of data type (say a three color fluorescence trace). You should only have to define this new type. Functions acting on time traces are not allowed to depend on the specifics of a fluorescence trace (say, the number of colors it has). In stead, we supply the `TimeTrace` or `Experiment` as input to the `DataProcessor`.  
 * If you want to add a new kind of output file, you should only have to add a reading and writing function in `data_io`. The data structures `TimeTrace`, `Experiment`, etc. are not allowed to know the specific implementation used to write the data. In stead, we supply the trace as an argument to the writing function (_or vice versa if appropriate_). 
 
 This principle is called **_'dependency injection'_** and essentially prevents us from writing code that has extensive checks for "if the data is from the magnetic tweezers, do A. if the code is from the TIRF, do B." Adding a new type of data is then as easy as defining this new class. No need to expand all these `if else` cases in the data processing functions, the reading/writing, etc. 
