@@ -15,13 +15,9 @@ import numpy as np
 from numpy.typing import NDArray
 from trace_operations import add, add_constant_value, multiply_by_value, subtract
 from type_definitions import TimeTraceType
+from exception_definitions import InvalidTimeTraceError
 
 Scalar = int | float | np.integer | np.floating
-
-
-# custom error to improve readability a bit
-class InvalidTimeTraceError(Exception):
-    pass
 
 
 @dataclass

@@ -7,13 +7,8 @@ from copy import deepcopy
 from typing import Optional
 
 import numpy as np
-
+from exception_definitions import InvalidTimeTraceError
 from type_definitions import TimeTraceType
-
-
-class InvalidTimeTraceError(Exception):
-    pass
-
 
 Scalar = int | float | np.integer | np.floating
 
@@ -157,7 +152,7 @@ def multiply_by_value(
     )
 
 
-def average_trace(
+def average_traces(
     trace_list: list[TimeTraceType], new_id: str = "averaged time trace"
 ) -> TimeTraceType:
     """

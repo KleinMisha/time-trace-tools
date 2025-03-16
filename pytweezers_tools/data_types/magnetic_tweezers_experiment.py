@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
-from numpy.typing import NDArray
-
 from experiment import Experiment
 from magnetic_tweezers_trace import MagneticTweezersTrace
-from trace_operations import average_trace, subtract
+from numpy.typing import NDArray
+from trace_operations import average_traces, subtract
 
 
 @dataclass
@@ -76,7 +75,7 @@ class MagneticTweezersExperiment(Experiment[MagneticTweezersTrace]):
         reference subtraction. If multiple reference beads are present, their average signal will be used.
         """
         # create reference signal (if needed, if there is a single reference bead, the average will return itself)
-        reference_trace = average_trace(trace_list=self.REF_beads, new_id="REF")
+        reference_trace = average_traces(trace_list=self.REF_beads, new_id="REF")
 
         # perform the drift correction / reference subtraction
         after_ref_subtraction = []
