@@ -114,3 +114,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# DS_store file that is just a nuisance 
+*.DS_store
