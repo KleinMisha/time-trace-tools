@@ -8,7 +8,14 @@ from typing import Optional
 
 import numpy as np
 
-from .time_trace import InvalidTimeTraceError, TimeTraceType
+from type_definitions import TimeTraceType
+
+
+class InvalidTimeTraceError(Exception):
+    pass
+
+
+Scalar = int | float | np.integer | np.floating
 
 
 def _validate_traces_are_equal_length(
@@ -107,7 +114,7 @@ def subtract(
 
 
 def add_constant_value(
-    trace: TimeTraceType, value: float, new_id: Optional[str] = None
+    trace: TimeTraceType, value: Scalar, new_id: Optional[str] = None
 ) -> TimeTraceType:
     """
     add/subtract constant value from all value arrays.
@@ -129,7 +136,7 @@ def add_constant_value(
 
 
 def multiply_by_value(
-    trace: TimeTraceType, value: float, new_id: Optional[str] = None
+    trace: TimeTraceType, value: Scalar, new_id: Optional[str] = None
 ) -> TimeTraceType:
     """
     Multiply all value arrays by constant value.

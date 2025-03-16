@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from numpy.typing import NDArray
 
-from .experiment import Experiment
-from .magnetic_tweezers_trace import MagneticTweezersTrace
-from .trace_operations import average_trace, subtract
+from experiment import Experiment
+from magnetic_tweezers_trace import MagneticTweezersTrace
+from trace_operations import average_trace, subtract
 
 
 @dataclass

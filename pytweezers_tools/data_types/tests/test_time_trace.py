@@ -7,19 +7,24 @@ import pytest
 from magnetic_tweezers_trace import MagneticTweezersTrace
 from time_trace import InvalidTimeTraceError, TimeTrace
 
+Scalar = int | float | np.integer | np.floating
+
 
 @pytest.fixture
 def time_trace() -> MagneticTweezersTrace:
     """
     generate a mock MagneticTweezersTrace
-    NOTE: Shouldn't use random numbers in a unittest, but given there is no way any of these tests can fail for any possible outcome, I think it is still fine.
-    TODO: Avoid using random numbers?
     """
     t = np.linspace(0, 100, 10, dtype=np.float64)
-    x = np.random.random(size=len(t))
-    y = np.random.random(size=len(t))
-    z = np.random.random(size=len(t))
+    x = np.array([1.0] * len(t))
+    y = np.array([1.0] * len(t))
+    z = np.array([1.0] * len(t))
     return MagneticTweezersTrace(ID="mock", t=t, x=x, y=y, z=z)
+
+
+@pytest.fixture
+def scalar() -> Scalar:
+    return 10.0
 
 
 def test_creating_valid_mt_trace(time_trace: TimeTrace) -> None:
@@ -40,6 +45,60 @@ def test_creating_invalid_mt_trace() -> None:
 
 def test_len_of_time_trace(time_trace: TimeTrace) -> None:
     assert len(time_trace) == len(time_trace.t)
+
+
+def test_addition(time_trace: TimeTrace) -> None:
+    """
+    test that if I add a time trace to itself, all values get doubled
+    """
+    new_trace = time_trace + time_trace
+    for new_values, original_values in zip(new_trace._values, time_trace._values):
+        assert np.all(new_values == original_values + original_values)
+
+
+def test_subtraction(time_trace: TimeTrace) -> None:
+    """
+    test that if I subtract a trace from itself, all values are zeros
+    """
+    new_trace = time_trace - time_trace
+    for value_array in new_trace._values:
+        assert all(value_array == 0.0)
+
+
+def test_addition_of_constant(time_trace: TimeTrace, scalar: Scalar) -> None:
+    """
+    check that I can properly add a constant value to all values in the trace
+    """
+    new_trace = time_trace + scalar
+    for new_values, original_values in zip(new_trace._values, time_trace._values):
+        assert np.all(new_values == original_values + scalar)
+
+
+def test_subtraction_of_constant(time_trace: TimeTrace, scalar: Scalar) -> None:
+    """
+    check that I can properly add a constant value to all values in the trace
+    """
+    new_trace = time_trace - scalar
+    for new_values, original_values in zip(new_trace._values, time_trace._values):
+        assert np.all(new_values == original_values - scalar)
+
+
+def test_mupltiplication_by_constant(time_trace: TimeTrace, scalar: Scalar) -> None:
+    """
+    test multiplying all values by a constant value
+    """
+    new_trace = time_trace * scalar
+    for new_values, original_values in zip(new_trace._values, time_trace._values):
+        assert np.all(new_values == original_values * scalar)
+
+
+def test_division_by_constant(time_trace: TimeTrace, scalar: Scalar) -> None:
+    """
+    test dividing all values by a constant value
+    """
+    new_trace = time_trace / scalar
+    for new_values, original_values in zip(new_trace._values, time_trace._values):
+        assert np.all(new_values == original_values / scalar)
 
 
 def test_creating_mt_trace_with_label(time_trace: TimeTrace) -> None:

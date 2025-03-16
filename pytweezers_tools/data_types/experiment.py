@@ -6,13 +6,11 @@ Core class to define a series of experiments (each containing a series of traces
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Callable, Generic
 
 from .time_trace import TimeTraceType
 
 FilePath = Path | str
-
-ExperimentType = TypeVar("ExperimentType", bound="Experiment")
 
 
 @dataclass

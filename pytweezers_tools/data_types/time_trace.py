@@ -5,14 +5,18 @@ Abstraction is used to define a time trace as anything that has a time array + a
 - Misha, Jan 2025
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional, TypeVar
+from typing import Optional
 
 import numpy as np
 from numpy.typing import NDArray
+from trace_operations import add, add_constant_value, multiply_by_value, subtract
+from type_definitions import TimeTraceType
 
-TimeTraceType = TypeVar("TimeTraceType", bound="TimeTrace")
+Scalar = int | float | np.integer | np.floating
 
 
 # custom error to improve readability a bit
@@ -68,8 +72,57 @@ class TimeTrace(ABC):
         self._validate_array_lengths()
 
     def __len__(self) -> int:
-        """overwrite the 'len()' method, so that when asking for the length of a time trace, it returns the number of time frames"""
+        """
+        Overload the 'len()' method, so that when asking for the length of a time trace, it returns the number of time frames
+        """
         return len(self.t)
+
+    def __add__(self, other: TimeTrace | Scalar) -> TimeTrace:
+        """
+        Overload the addition '+' operator for convenience
+        """
+        if isinstance(other, TimeTrace):
+            return add(self, other)
+
+        elif isinstance(other, Scalar):
+            return add_constant_value(self, other)
+
+        else:
+            return NotImplemented
+
+    def __sub__(self, other: TimeTrace | Scalar) -> TimeTrace:
+        """
+        Overload the subtraction '-' operator for convenience
+        """
+        if isinstance(other, TimeTrace):
+            return subtract(self, other)
+
+        elif isinstance(other, Scalar):
+            # add -1 * value is the same as subtracting the value itself
+            negative_value = -1 * other
+            return add_constant_value(self, negative_value)
+
+        else:
+            return NotImplemented
+
+    def __mul__(self, other: Scalar) -> TimeTrace:
+        """
+        Overload the multiplication '*' operator for convenience
+        """
+        if isinstance(other, Scalar):
+            return multiply_by_value(self, other)
+        else:
+            return NotImplemented
+
+    def __truediv__(self, other: Scalar) -> TimeTrace:
+        """
+        Overload the multiplication '/' operator for convenience
+        """
+        if isinstance(other, Scalar):
+            inverse_of_number = other ** (-1)
+            return multiply_by_value(self, inverse_of_number)
+        else:
+            return NotImplemented
 
     def add_labels(self, labels: list[str]) -> None:
         self.labels.extend(labels)
