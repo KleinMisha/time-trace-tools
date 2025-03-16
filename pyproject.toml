@@ -13,3 +13,12 @@ dependencies = [
     "scipy>=1.15.1",
     "seaborn>=0.13.2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["pytweezers_tools/data_types"]

@@ -86,8 +86,8 @@ class TimeTrace(ABC):
             # if this is the first time labelling this section
             new_section = {key: [label]}
             self.section_labels.update(new_section)
-        else:
-            # simply append to the list
+        elif label not in self.section_labels[key]:
+            # simply append to the list, only if this label is not a duplicate
             self.section_labels[key].append(label)
 
     def add_labelled_sections_from_dictionary(
