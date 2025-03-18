@@ -256,3 +256,43 @@ def test_fetch_section_non_existing_label(time_trace: MockTimeTrace) -> None:
     }
     time_trace.add_labelled_sections_from_dictionary(section_labels=my_sections)
     assert time_trace._fetch_indices_section_by_label(label="third label") == []
+
+
+def test_create_time_trace_for_section(time_trace: MockTimeTrace) -> None:
+    part_of_trace = time_trace.create_time_trace_for_section(start_index=0, end_index=3)
+
+    # check default id is working
+    assert part_of_trace.ID == ""
+
+    # check if sectioning / new trace is indeed the correct part of the complete trace
+    for values_complete_trace, values_part_of_trace in zip(
+        time_trace._values, part_of_trace._values
+    ):
+        assert len(values_complete_trace[0:3]) == len(values_part_of_trace)
+        assert np.all(values_complete_trace[0:3] == values_part_of_trace)
+
+
+def test_create_sections_by_label(time_trace: MockTimeTrace) -> None:
+    my_sections = {
+        (0, 3): ["first label"],
+        (4, 6): ["first label", "second label"],
+        (0, 9): ["second label"],
+    }
+    time_trace.add_labelled_sections_from_dictionary(my_sections)
+    parts_of_trace = time_trace.create_sections_by_label(label="first label")
+
+    # check that there are two parts to this trace with a label "first label"
+    assert len(parts_of_trace) == 2
+
+    # check that both parts of the traces are correctly partitioned
+    for values_complete_trace, values_part_of_trace in zip(
+        time_trace._values, parts_of_trace[0]._values
+    ):
+        assert len(values_complete_trace[0:3]) == len(values_part_of_trace)
+        assert np.all(values_complete_trace[0:3] == values_part_of_trace)
+
+    for values_complete_trace, values_part_of_trace in zip(
+        time_trace._values, parts_of_trace[1]._values
+    ):
+        assert len(values_complete_trace[4:6]) == len(values_part_of_trace)
+        assert np.all(values_complete_trace[4:6] == values_part_of_trace)
