@@ -74,6 +74,20 @@ def test_addition_of_constant(time_trace: MockTimeTrace, scalar: Scalar) -> None
         assert np.all(new_values == original_values + scalar)
 
 
+def test_commutativity_scalar_addition(
+    time_trace: MockTimeTrace, scalar: Scalar
+) -> None:
+    """
+    check commutativity, i.e. that "number + trace" works the same as "trace + number"
+    """
+    trace_plus_number = time_trace + scalar
+    number_plus_trace = scalar + time_trace
+    for trace_plus_number_values, number_plus_trace_values in zip(
+        trace_plus_number._values, number_plus_trace._values
+    ):
+        assert np.all(trace_plus_number_values == number_plus_trace_values)
+
+
 def test_subtraction_of_constant(time_trace: MockTimeTrace, scalar: Scalar) -> None:
     """
     check that I can properly add a constant value to all values in the trace
@@ -83,13 +97,27 @@ def test_subtraction_of_constant(time_trace: MockTimeTrace, scalar: Scalar) -> N
         assert np.all(new_values == original_values - scalar)
 
 
-def test_mupltiplication_by_constant(time_trace: MockTimeTrace, scalar: Scalar) -> None:
+def test_multiplication_by_constant(time_trace: MockTimeTrace, scalar: Scalar) -> None:
     """
     test multiplying all values by a constant value
     """
     new_trace = time_trace * scalar
     for new_values, original_values in zip(new_trace._values, time_trace._values):
         assert np.all(new_values == original_values * scalar)
+
+
+def test_commutativity_scalar_multiplication(
+    time_trace: MockTimeTrace, scalar: Scalar
+) -> None:
+    """
+    check commutativity, i.e. that "number + trace" works the same as "trace + number"
+    """
+    trace_x_number = time_trace * scalar
+    number_x_trace = scalar * time_trace
+    for trace_x_number_values, number_x_trace_values in zip(
+        trace_x_number._values, number_x_trace._values
+    ):
+        assert np.all(trace_x_number_values == number_x_trace_values)
 
 
 def test_division_by_constant(time_trace: MockTimeTrace, scalar: Scalar) -> None:

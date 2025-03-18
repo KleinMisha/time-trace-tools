@@ -12,10 +12,10 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
+from exception_definitions import InvalidTimeTraceError
 from numpy.typing import NDArray
 from trace_operations import add, add_constant_value, multiply_by_value, subtract
 from type_definitions import TimeTraceType
-from exception_definitions import InvalidTimeTraceError
 
 Scalar = int | float | np.integer | np.floating
 
@@ -86,6 +86,15 @@ class TimeTrace(ABC):
         else:
             return NotImplemented
 
+    def __radd__(self, other: Scalar) -> TimeTrace:
+        """
+        implement 'Scalar + TimeTrace' for commutativity of '+' operator
+        """
+        if isinstance(other, Scalar):
+            return self.__add__(other)
+        else:
+            return NotImplemented
+
     def __sub__(self, other: TimeTrace | Scalar) -> TimeTrace:
         """
         Overload the subtraction '-' operator for convenience
@@ -107,6 +116,15 @@ class TimeTrace(ABC):
         """
         if isinstance(other, Scalar):
             return multiply_by_value(self, other)
+        else:
+            return NotImplemented
+
+    def __rmul__(self, other: Scalar) -> TimeTrace:
+        """
+        implement 'Scalar * TimeTrace' for commutativity of '*' operator
+        """
+        if isinstance(other, Scalar):
+            return self.__mul__(other)
         else:
             return NotImplemented
 
