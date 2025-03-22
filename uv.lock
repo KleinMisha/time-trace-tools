@@ -1287,7 +1287,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pytweezer-tools"
+name = "pytweezers-tools"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

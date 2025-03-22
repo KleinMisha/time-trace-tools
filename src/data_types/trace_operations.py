@@ -7,8 +7,9 @@ from copy import deepcopy
 from typing import Optional
 
 import numpy as np
-from exception_definitions import InvalidTimeTraceError
-from type_definitions import TimeTraceType
+
+from src.data_types.exception_definitions import InvalidTimeTraceError
+from src.data_types.type_definitions import TimeTraceType
 
 Scalar = int | float | np.integer | np.floating
 

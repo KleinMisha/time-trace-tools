@@ -1,0 +1,3 @@
+from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
+
+print(MagneticTweezersTrace)
