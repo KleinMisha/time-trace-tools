@@ -103,13 +103,15 @@ def test_invalid_addition_types(time_trace: MockTimeTrace, scalar: Scalar) -> No
         (1, 2, 3, 4, 5),
         [time_trace, time_trace],
     ]
+    # invalid __add__
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            time_trace + value
+            _ = time_trace + value
 
+    # invalid __radd__
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            value + time_trace
+            _ = value + time_trace
 
 
 def test_invalid_subtraction_types(time_trace: MockTimeTrace) -> None:
@@ -122,7 +124,7 @@ def test_invalid_subtraction_types(time_trace: MockTimeTrace) -> None:
     ]
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            time_trace - value
+            _ = time_trace - value
 
 
 def test_invalid_multiplication_types(time_trace: MockTimeTrace) -> None:
@@ -133,12 +135,15 @@ def test_invalid_multiplication_types(time_trace: MockTimeTrace) -> None:
         (1, 2, 3, 4, 5),
         [time_trace, time_trace],
     ]
+    # invalid __mul__
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            time_trace * value
+            _ = time_trace * value
+
+    # invalid __rmul__
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            value * time_trace
+            _ = value * time_trace
 
 
 def test_invalid_division_types(time_trace: MockTimeTrace) -> None:
@@ -151,4 +156,4 @@ def test_invalid_division_types(time_trace: MockTimeTrace) -> None:
     ]
     with pytest.raises(TypeError):
         for value in not_allowed_values:
-            time_trace / value
+            _ = time_trace / value
