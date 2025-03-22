@@ -13,7 +13,7 @@ import numpy as np
 import yaml
 from numpy.typing import NDArray
 
-from .labview_legacy import read_labview
+from src.data_io.labview_legacy import read_labview
 
 FilePath = Path | str
 
