@@ -12,10 +12,16 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import numpy as np
-from exception_definitions import InvalidTimeTraceError
 from numpy.typing import NDArray
-from trace_operations import add, add_constant_value, multiply_by_value, subtract
-from type_definitions import TimeTraceType
+
+from src.data_types.exception_definitions import InvalidTimeTraceError
+from src.data_types.trace_operations import (
+    add,
+    add_constant_value,
+    multiply_by_value,
+    subtract,
+)
+from src.data_types.type_definitions import TimeTraceType
 
 Scalar = int | float | np.integer | np.floating
 
@@ -26,7 +32,8 @@ class TimeTrace(ABC):
     Defines a generic time trace.
     Generally speaking, a time trace is anything that has a time array and any number of equally sized value arrays.
     traces can have labels assigned to them, or to a part of the trace.
-    ---------
+
+    ----------
     Abstract base class, so still needs specific implementations
     """
 

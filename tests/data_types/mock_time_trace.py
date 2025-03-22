@@ -2,7 +2,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from numpy.typing import NDArray
-from time_trace import TimeTrace
+
+from src.data_types.time_trace import TimeTrace
 
 
 @dataclass

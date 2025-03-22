@@ -1,5 +1,5 @@
 [project]
-name = "pytweezer-tools"
+name = "pytweezers-tools"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -10,7 +10,7 @@ dependencies = [
     "numpy>=2.2.3",
     "pandas>=2.2.3",
     "pyyaml>=6.0.2",
-    "scipy>=1.15.1",
+    "scipy>=1.15.2",
     "seaborn>=0.13.2",
 ]
 
@@ -21,4 +21,4 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = ["pytweezers_tools/data_types"]
+pythonpath = ["src/data_types"]

@@ -4,9 +4,8 @@ test generic workings of TimeTrace class, using MagneticTweezersTrace as an inst
 
 import numpy as np
 import pytest
-from magnetic_tweezers_trace import MagneticTweezersTrace
-from mock_time_trace import MockTimeTrace
-from exception_definitions import InvalidTimeTraceError
+from src.data_types.exception_definitions import InvalidTimeTraceError
+from tests.data_types.mock_time_trace import MockTimeTrace
 
 Scalar = int | float | np.integer | np.floating
 
@@ -27,20 +26,19 @@ def scalar() -> Scalar:
     return 10.0
 
 
-def test_creating_valid_mt_trace(time_trace: MockTimeTrace) -> None:
+def test_creating_valid_trace(time_trace: MockTimeTrace) -> None:
     print(time_trace)
 
 
-def test_creating_invalid_mt_trace() -> None:
+def test_creating_invalid_trace() -> None:
     ID = "invalid MT trace"
     t = np.linspace(0, 100, 10, dtype=np.float64)
     x = np.random.random(size=len(t) - 2)
     y = np.random.random(size=len(t) - 2)
-    z = np.random.random(size=len(t) - 2)
 
     # Now should raise NotATimeTraceError if I try to instantiate
     with pytest.raises(InvalidTimeTraceError):
-        MagneticTweezersTrace(ID, t=t, x=x, y=y, z=z)
+        MockTimeTrace(ID, t=t, value_one=x, value_two=y)
 
 
 def test_len_of_time_trace(time_trace: MockTimeTrace) -> None:

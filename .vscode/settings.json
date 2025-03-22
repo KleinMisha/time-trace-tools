@@ -2,7 +2,7 @@
     // Workbench settings
     "workbench.colorTheme": "Default Dark+",
     "workbench.colorCustomizations": {
-        "titleBar.activeBackground":"#047777"
+        "titleBar.activeBackground":"#209797",
     },
 
     // Editor settings / formating settings 
@@ -33,15 +33,23 @@
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
     "python.testing.pytestPath": "${workspaceFolder}/.venv/bin/pytest",
-    "python.testing.cwd": "${workspaceFolder}/pytweezers_tools/tests",
+    "python.testing.cwd": "${workspaceFolder}/tests",
 
-
+    
 
 
 
     // Spell checker settings
     "cSpell.language": "en-US",
-    "cSpell.ignoreWords": ["ndarray", "labview", "pytw", "pytweezers"],
+    "cSpell.ignoreWords": [
+        "ndarray",
+        "labview",
+        "pytw",
+        "pytweezers"
+    ],
+    "python.analysis.extraPaths": [
+        "./src/"
+    ],
 
 
 
