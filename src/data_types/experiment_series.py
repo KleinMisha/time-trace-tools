@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Generic, TypeVar
 
-from .experiment import ExperimentType
+from src.data_types.type_definitions import ExperimentType
 
 ExperimentSeriesType = TypeVar("ExperimentSeriesType", bound="ExperimentSeries")
 

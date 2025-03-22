@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from experiment import Experiment
 from magnetic_tweezers_trace import MagneticTweezersTrace
 from numpy.typing import NDArray
-from trace_operations import average_traces, subtract
+
+from src.data_types.trace_operations import average_traces, subtract
 
 
 @dataclass

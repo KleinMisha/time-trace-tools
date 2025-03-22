@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Generic
 
-from .time_trace import TimeTraceType
+from src.data_types.time_trace import TimeTraceType
 
 FilePath = Path | str
 
