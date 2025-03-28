@@ -38,7 +38,7 @@ class TimeTrace(ABC):
     """
 
     ID: str
-    t: NDArray[np.float64]
+    t: NDArray[np.floating]
     labels: list[str] = field(default_factory=list)
     section_labels: dict[tuple[int, int], list[str]] = field(default_factory=dict)
 
