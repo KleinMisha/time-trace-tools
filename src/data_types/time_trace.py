@@ -44,7 +44,7 @@ class TimeTrace(ABC):
 
     @property
     @abstractmethod
-    def _values(self) -> tuple[NDArray[np.float64], ...]:
+    def _values(self) -> tuple[NDArray[np.floating], ...]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation
