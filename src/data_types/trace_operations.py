@@ -3,6 +3,8 @@ basic operations that allow us to add, subtract, etc. multiple traces.
 Also includes shifting a trace to the left/right
 """
 
+from __future__ import annotations
+
 from copy import deepcopy
 from typing import TYPE_CHECKING, Optional
 
@@ -12,7 +14,9 @@ from src.data_types.exception_definitions import InvalidTimeTraceError
 from src.data_types.type_definitions import TimeTraceType
 
 if TYPE_CHECKING:
-    from src.data_types.time_trace import TimeTrace
+    from src.data_types.time_trace import (
+        TimeTrace,
+    )  # NOTE: this prevents circular imports (only need to import TimeTrace for the typechecker, not at runtime)
 
 Scalar = int | float | np.integer | np.floating
 
