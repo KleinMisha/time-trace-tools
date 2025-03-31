@@ -3,14 +3,24 @@ Core class to define a series of experiments (each containing a series of traces
 
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Generic
 
-from src.data_types.time_trace import TimeTraceType
+from src.data_types.experiment_operations import (
+    add,
+    add_trace_to_experiment,
+    subtract,
+    subtract_trace_from_experiment,
+)
+from src.data_types.time_trace import TimeTrace
+from src.data_types.type_definitions import TimeTraceType
 
 FilePath = Path | str
+DataLoaderFunction = Callable[[FilePath], Any]
 
 
 @dataclass
@@ -28,17 +38,6 @@ class Experiment(ABC, Generic[TimeTraceType]):
     path_to_raw_data: FilePath = Path("")
     experimental_conditions: dict[str, Any] = field(default_factory=dict)
 
-    def load_raw_data(
-        self, path: FilePath, data_loader_fn: Callable[[FilePath], Any]
-    ) -> None:
-        """
-        Implement how the raw dat is loaded using the `data_loader_fn` method.
-
-        In stead of a return, set the `._raw_data` attribute
-        """
-        raw_data = data_loader_fn(path)
-        self._raw_data = raw_data
-
     @abstractmethod
     def _create_trace_list_from_raw_data(self) -> list[TimeTraceType]:
         """
@@ -47,12 +46,51 @@ class Experiment(ABC, Generic[TimeTraceType]):
         """
         pass
 
+    def __len__(self) -> int:
+        return len(self.traces)
+
+    def __add__(
+        self, other: Experiment[TimeTraceType] | TimeTraceType
+    ) -> Experiment[TimeTraceType]:
+        """
+        Overload the addition '+' operator for convenience
+        """
+        if isinstance(other, Experiment):
+            return add(self, other)
+        elif isinstance(other, TimeTrace):
+            return add_trace_to_experiment(self, other)
+        else:
+            return NotImplemented
+
+    def __sub__(
+        self, other: Experiment[TimeTraceType] | TimeTraceType
+    ) -> Experiment[TimeTraceType]:
+        """
+        Overload the addition '-' operator for convenience
+        """
+        if isinstance(other, Experiment):
+            return subtract(self, other)
+        elif isinstance(other, TimeTrace):
+            return subtract_trace_from_experiment(self, other)
+        else:
+            return NotImplemented
+
+    def load_raw_data(self, path: FilePath, data_loader_fn: DataLoaderFunction) -> None:
+        """
+        Implement how the raw dat is loaded using the `data_loader_fn` method.
+
+        In stead of a return, set the `._raw_data` attribute
+        """
+        raw_data = data_loader_fn(path)
+        self._raw_data = raw_data
+
     def create_traces_from_raw_data(self) -> None:
         trace_list = self._create_trace_list_from_raw_data()
         self.traces = trace_list
 
     def add_traces(self, trace_list: list[TimeTraceType]) -> None:
-        self.traces.extend(trace_list)
+        for trace in trace_list:
+            self.__add__(trace)
 
     def remove_trace(self, trace_id: str) -> None:
         after_removal = [trace for trace in self.traces if trace.ID != trace_id]
@@ -88,6 +126,3 @@ class Experiment(ABC, Generic[TimeTraceType]):
         for trace_id, label_list in labels.items():
             trace = self.fetch_trace(trace_id)
             trace.add_labels(labels=label_list)
-
-    def __len__(self) -> int:
-        return len(self.traces)

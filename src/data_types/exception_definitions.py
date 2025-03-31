@@ -6,7 +6,15 @@ Avoids redefining this every time (even though it is just a few lines of code)
 
 class InvalidTimeTraceError(Exception):
     """
-    Raise when you are trying to instantiate an invalid TimeTrace or when you are trying to perform an invalid operation on (a set of) TimeTrace(s)
+    Raise when you are trying to instantiate an invalid TimeTrace
+    """
+
+    pass
+
+
+class InvalidExperimentError(Exception):
+    """
+    Raise when you are trying to instantiate an invalid Experiment
     """
 
     pass
