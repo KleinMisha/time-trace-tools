@@ -6,6 +6,7 @@ the tests written here are trivial of course.
 
 import numpy as np
 import pytest
+
 from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 
