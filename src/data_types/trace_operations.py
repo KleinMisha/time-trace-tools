@@ -4,12 +4,15 @@ Also includes shifting a trace to the left/right
 """
 
 from copy import deepcopy
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
 from src.data_types.exception_definitions import InvalidTimeTraceError
 from src.data_types.type_definitions import TimeTraceType
+
+if TYPE_CHECKING:
+    from src.data_types.time_trace import TimeTrace
 
 Scalar = int | float | np.integer | np.floating
 
@@ -23,9 +26,7 @@ def _validate_traces_are_equal_length(
         )
 
 
-def _validate_traces_are_of_same_type(
-    trace_1: TimeTraceType, trace_2: TimeTraceType
-) -> None:
+def _validate_traces_are_of_same_type(trace_1: TimeTrace, trace_2: TimeTrace) -> None:
     if not isinstance(trace_1, type(trace_2)):
         raise InvalidTimeTraceError(
             f"Cannot use traces of different kinds. {trace_1.ID} is a {type(trace_1)}, but {trace_2.ID} is a {type(trace_2)}"
