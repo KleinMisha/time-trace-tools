@@ -8,8 +8,8 @@ Abstraction is used to define a time trace as anything that has a time array + a
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from typing import Optional
+from dataclasses import dataclass, field, fields
+from typing import Any, Optional
 
 import numpy as np
 from numpy.typing import NDArray
@@ -35,6 +35,7 @@ class TimeTrace(ABC):
 
     ----------
     Abstract base class, so still needs specific implementations
+    !: Inherit only as dataclass when setting @dataclass(eq=False) in the decorator to ensure proper '==' is implemented as done in this class
     """
 
     ID: str
@@ -73,6 +74,40 @@ class TimeTrace(ABC):
         """
         _ = self._values  # make sure to instantiate this attribute
         self._validate_array_lengths()
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Overload the '==' operator to properly deal with the numpy arrays
+        ---
+        Even though dataclasses automatically create the comparison operator '==' (through __eq__()), we need to modify it as we
+        want to correctly compare fields with NumPy arrays. By default array1 == array2 will create an array of booleans (element-wise comparison).
+        To get an unambiguous comparison of two time traces, we need to tell it to check if the entirety of those arrays are equal.
+        """
+        # If the other object is not the same subclass of TimeTrace, we immediately know if cannot be equal
+        if not isinstance(other, TimeTrace):
+            return NotImplemented
+
+        # now we established they are both instances of the same class
+        # now compare all fields other than the value arrays
+        for element in fields(self):
+            is_not_a_value_array = element.name not in self._value_names
+            is_not_time_array = element.name != "t"
+            is_not_equal = getattr(self, element.name) != getattr(other, element.name)
+            if is_not_a_value_array and is_not_time_array and is_not_equal:
+                return False
+
+        # now we compared all non-value arrays for equality (__eq__() works properly on other stuff, just numpy arrays give an issue at times).
+        # now we check if the time arrays are equal
+        if not np.array_equal(self.t, other.t):
+            return False
+
+        # all that is left is to compare if the entirety of each value is equal to its counterpart
+        for own_array, other_array in zip(self._values, other._values):  # type: ignore
+            if not np.array_equal(own_array, other_array):
+                return False
+
+        # If you make it passed all these checks --> Congratulations! the two objects are equal. So if you did not exit the code before now, the answer must be 'True'
+        return True
 
     def __len__(self) -> int:
         """

@@ -11,7 +11,7 @@ from numpy.typing import NDArray
 from src.data_types.time_trace import TimeTrace
 
 
-@dataclass
+@dataclass(eq=False)
 class MagneticTweezersTrace(TimeTrace):
     # A slight bit disappointing I cannot just define a new variable here without default value
     # At least this seems like a small compromise to make, user-experience wise.

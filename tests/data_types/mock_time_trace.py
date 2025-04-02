@@ -6,15 +6,15 @@ from numpy.typing import NDArray
 from src.data_types.time_trace import TimeTrace
 
 
-@dataclass
+@dataclass(eq=False)
 class MockTimeTrace(TimeTrace):
-    value_one: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
-    value_two: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    value_one: NDArray[np.floating] = field(default_factory=lambda: np.array([]))
+    value_two: NDArray[np.floating] = field(default_factory=lambda: np.array([]))
 
     @property
     def _values(
         self,
-    ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+    ) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation
