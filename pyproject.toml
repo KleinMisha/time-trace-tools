@@ -25,5 +25,6 @@ pythonpath = "src"
 
 [tool.coverage.report]
 exclude_lines = [
-    "if TYPE_CHECKING:" #ignores the 'if TYPE_CHECKING' blocks in the coverage report
+    "if TYPE_CHECKING:" , #ignores the 'if TYPE_CHECKING' blocks in the coverage report,
+    "@abstractmethod"
 ]
