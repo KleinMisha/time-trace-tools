@@ -10,6 +10,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Generic
 
+from numpy.typing import NDArray
+
 from src.data_types.experiment_operations import (
     add,
     add_trace_to_experiment,
@@ -20,7 +22,7 @@ from src.data_types.time_trace import TimeTrace
 from src.data_types.type_definitions import TimeTraceType
 
 FilePath = Path | str
-DataLoaderFunction = Callable[[FilePath], Any]
+DataLoaderFunction = Callable[[FilePath], tuple[NDArray[Any], ...]]
 
 
 @dataclass

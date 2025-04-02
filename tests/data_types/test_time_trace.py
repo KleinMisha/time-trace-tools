@@ -4,6 +4,7 @@ test generic workings of TimeTrace class, using MagneticTweezersTrace as an inst
 
 import numpy as np
 import pytest
+
 from src.data_types.exception_definitions import InvalidTimeTraceError
 from tests.data_types.mock_time_trace import MockTimeTrace
 
@@ -15,7 +16,7 @@ def time_trace() -> MockTimeTrace:
     """
     generate a mock (MagneticTweezers)TimeTrace
     """
-    t = np.linspace(0, 100, 10, dtype=np.float64)
+    t = np.linspace(0, 100, 10)
     x = np.array([1.0] * len(t))
     y = np.array([1.0] * len(t))
     return MockTimeTrace(ID="mock", t=t, value_one=x, value_two=y)

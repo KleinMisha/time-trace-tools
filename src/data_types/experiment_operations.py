@@ -57,10 +57,16 @@ def subtract(
     """
     remove all traces of experiment_2 from experiment_1 (experiment_1 - experiment_2)
     Essentially undoes the `add()` operation
+
+
+    NOTE: dataclasses already implement the __eq__() method, so it should be capable of assessing equality of two time traces out of the box
     """
+
+    difference_trace_list = [
+        trace for trace in experiment_1.traces if trace not in experiment_2.traces
+    ]
     exp_1_min_2 = deepcopy(experiment_1)
-    for trace_2 in experiment_2.traces:
-        exp_1_min_2.traces.remove(trace_2)
+    exp_1_min_2.traces = difference_trace_list
     return exp_1_min_2
 
 
