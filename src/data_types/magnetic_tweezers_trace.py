@@ -16,15 +16,15 @@ class MagneticTweezersTrace(TimeTrace):
     # A slight bit disappointing I cannot just define a new variable here without default value
     # At least this seems like a small compromise to make, user-experience wise.
     # i.e. Always call it as MagneticTweezersTrace(ID,t , x=..., y=..., z=...)
-    x: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
-    y: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
-    z: NDArray[np.float64] = field(default_factory=lambda: np.array([]))
+    x: NDArray[np.floating] = field(default_factory=lambda: np.array([]))
+    y: NDArray[np.floating] = field(default_factory=lambda: np.array([]))
+    z: NDArray[np.floating] = field(default_factory=lambda: np.array([]))
     is_REF: bool = False
 
     @property
     def _values(
         self,
-    ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    ) -> tuple[NDArray[np.floating], NDArray[np.floating], NDArray[np.floating]]:
         """
         return all the value arrays as a tuple.
         See subclasses for specific implementation
