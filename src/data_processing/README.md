@@ -28,13 +28,13 @@ from abc import ABC, abstractmethod
 
 @dataclass
 class Transformation(ABC):
-    target_traces: list[TimeTrace] # set of time traces you want to apply transform to 
+    target_traces: list[str] # set of trace_ids you want to apply the transformation to 
 
     # optional additional parameters 
     
 
 
-    def apply(self) -> TimeTrace:
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
         """
         here you implement the function that takes in a trace, applies a transform, then returns the modified version of the trace. 
         """
@@ -47,7 +47,7 @@ from src.data_processing.transformation import Transformation
 @dataclass
 class KaiserBesselFilter(Transformation):
     cuttoff_frequency: float 
-    def apply(self):
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
         """
         apply the Kaiser-Bessel Filter and create a filtered version of the TimeTrace you passed in. 
         """
@@ -55,13 +55,13 @@ class KaiserBesselFilter(Transformation):
 @dataclass
 class MovingAverageFilter(Transformation):
     window_size: int 
-    def apply(self):
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
         """
         apply the moving average and create a filtered version of the TimeTrace you passed in. 
         """
 @dataclass
 class ShiftToOrigin(Transformation):
-    def apply(self):
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
         """
         set trace to start from the origin (as we do for synchronizing traces)
         """
@@ -72,6 +72,7 @@ class ShiftToOrigin(Transformation):
 Now, we use a `ExperimentProcessor` that is responsible for keeping track of the `transformations` you want to perform to your `Experiment`
 
 ```python
+from copy import deepcopy 
 @dataclass
 class ExperimentProcessor:
     """
@@ -105,6 +106,43 @@ class ExperimentProcessor:
         Only when you call this function will things actually be computed.
         You compute it up until the state index
         """
+        # fresh start from initial state 
+        traces = deepcopy(self.original_experiment.traces)
         for transformation in self.transformations[: self.state_index]:
-            transformation.apply()
+
+            traces = transformation.apply(traces)
+        # NOTE: the __class__() method will give type of Experiment this particular implementation is
+        return self.original_experiment.__class__(
+            ID=self.original_experiment.ID, traces=traces
+        )
+```
+
+# NOTES:  Different types of commands/operations? 
+
+Typically we have the following kind of operations to perform: 
+* `Transformation`: Takes a (list of) trace(s) and produces a modified (list of) trace(s)
+* `Metric`: Takes a (list of) trace(s) and produces a number or list of numbers per trace as its result (think first-passage times, event durations, etc.)
+* `AggregateMetric`: produce one number for the whole `Experiment` 
+
+
+```python
+from abc import ABC, abstractmethod 
+
+Scalar = int | float | np.integer | np.floating 
+@dataclass
+class Metric(ABC):
+    target_traces: list[str] # set of trace_ids you want to apply the transformation to 
+
+    # optional additional parameters 
+    
+
+
+    def apply(self, trace_list: list[TimeTrace]) -> dict[str, Scalar|list[Scalar]]:
+        """
+        outputs a result for every input trace
+
+        maybe have this produce a dictionary mapping the trace ID to the corresponding result ? 
+
+        """
+
 ```

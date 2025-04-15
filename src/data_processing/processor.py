@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 
 from src.data_processing.transformation import Transformation
@@ -11,11 +12,11 @@ class ExperimentProcessor:
     this way you can change your workflow by undoing/redoing transforms as many times as you want (as it under the hood just reproduces the series of events starting from the initial state)
     """
 
-    experiment: Experiment
+    original_experiment: Experiment
     transformations: list[Transformation] = field(default_factory=list)
     state_index: int = 0
 
-    def register(self, transformation: Transformation) -> None:
+    def add_transformation(self, transformation: Transformation) -> None:
         """
         register the transformation.
         NOTE: If you undid a transformation (without redoing it), you will at this point 'confirm you actually never wanted to perform that operation'. After registering, we
@@ -39,10 +40,19 @@ class ExperimentProcessor:
         if self.state_index < len(self.transformations):
             self.state_index += 1
 
-    def transform_traces(self) -> None:
+    def transform_traces(self) -> Experiment:
         """
         Only when you call this function will things actually be computed.
         You compute it up until the state index
         """
+        # start fresh / from initial state
+        traces = deepcopy(self.original_experiment.traces)
         for transformation in self.transformations[: self.state_index]:
-            transformation.apply()
+            # keep updating the traces.
+            # NOTE: Edits that are not consecutive --> you would make different ExperimentProcessors for the different workflows
+            traces = transformation.apply(traces)
+
+        # NOTE: the __class__() method will give type of Experiment this particular implementation is
+        return self.original_experiment.__class__(
+            ID=self.original_experiment.ID, traces=traces
+        )

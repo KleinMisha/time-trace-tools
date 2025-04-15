@@ -11,10 +11,11 @@ class Transformation(ABC):
     NOTE: Dependency injection --> only dependencies on generic TimeTraces and Experiments, not on specific implementations
     """
 
-    target_traces: list[TimeTrace]
+    # trace identifiers you want to modify
+    target_traces: list[str]
 
     @abstractmethod
-    def apply(self) -> list[TimeTrace]:
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
         """
         apply transformation on the target traces to produce new set of traces
         """

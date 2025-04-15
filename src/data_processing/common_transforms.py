@@ -2,7 +2,6 @@
 set of commands (Transformations) frequently encountered
 """
 
-from copy import deepcopy
 from dataclasses import dataclass
 
 from src.data_processing.transformation import Transformation
@@ -17,21 +16,28 @@ class ShiftToOrigin(Transformation):
 
     coordinate: str
 
-    def apply(self) -> list[TimeTrace]:
-        before = deepcopy(self.target_traces)
-        after = []
-        for target in before:
-            if self.coordinate in target._value_names:
-                time_array = target.t
-                start_time = target.t[0]
-                time_array -= start_time
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
+        traces_to_edit = [
+            trace for trace in trace_list if trace.ID in self.target_traces
+        ]
 
-                value_array = getattr(target, self.coordinate)
-                starting_value = value_array[0]
-                value_array -= starting_value
+        new_traces = []
+        for target in traces_to_edit:
+            if self.coordinate not in target._value_names:
+                raise AttributeError(
+                    f"Time trace {target.ID} has no value attributed named {self.coordinate}"
+                )
 
-                after.append(target)
-        return after
+            time_array = target.t
+            start_time = target.t[0]
+            time_array -= start_time
+
+            value_array = getattr(target, self.coordinate)
+            starting_value = value_array[0]
+            value_array -= starting_value
+
+            new_traces.append(target)
+        return new_traces
 
 
 @dataclass
@@ -43,10 +49,13 @@ class SelectFrames(Transformation):
     start_frame: int
     end_frame: int
 
-    def apply(self) -> list[TimeTrace]:
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
+        traces_to_edit = [
+            trace for trace in trace_list if trace.ID in self.target_traces
+        ]
         part_of_traces = []
 
-        for target in self.target_traces:
+        for target in traces_to_edit:
             part_of_traces.append(
                 target.create_time_trace_for_section(
                     start_index=self.start_frame, end_index=self.end_frame
@@ -64,9 +73,12 @@ class SelectTimeWindow(Transformation):
     from_time: float
     to_time: float
 
-    def apply(self) -> list[TimeTrace]:
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
+        traces_to_edit = [
+            trace for trace in trace_list if trace.ID in self.target_traces
+        ]
         part_of_traces = []
-        for target in self.target_traces:
+        for target in traces_to_edit:
             # find closest index based on specified time points
             start_index = 0
             end_index = 1
@@ -87,10 +99,13 @@ class SelectLabeledParts(Transformation):
 
     section_label: str
 
-    def apply(self) -> list[TimeTrace]:
+    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
+        traces_to_edit = [
+            trace for trace in trace_list if trace.ID in self.target_traces
+        ]
         parts_of_traces = []
 
-        for target in self.target_traces:
+        for target in traces_to_edit:
             for indices in target._fetch_indices_section_by_label(
                 label=self.section_label
             ):
