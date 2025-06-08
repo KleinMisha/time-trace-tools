@@ -18,7 +18,7 @@ from src.data_io.labview_legacy import read_labview
 FilePath = Path | str
 
 
-def read_mt_data(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+def read_mt_data(path: FilePath) -> tuple[NDArray[np.floating], NDArray[np.float64]]:
     """
     loads raw data from magnetic-tweezers (MT)
 
@@ -61,7 +61,7 @@ def read_pytweezers(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.flo
         pytweezer stores the data as (num_frames, num_beads, 3). For every frame you have x,y,z for every bead. Will parse it differently
     """
 
-    # --- the following functions are taken from pytweezers.utils.data_io (and just given different names for convinience-sake) ---
+    # --- the following functions are taken from pytweezers.utils.data_io (and just given different names for convenience-sake) ---
     def _end_of_file(f: IO) -> bool:
         """
         check if you are at the end of the file

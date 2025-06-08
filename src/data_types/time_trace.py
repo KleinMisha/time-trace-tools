@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field, fields
-from typing import Any, Optional
+from typing import Optional
 
 import numpy as np
 from numpy.typing import NDArray
