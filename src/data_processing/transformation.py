@@ -1,22 +1,23 @@
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
+"""
+Interface defining an operation to modify a (set of) target TimeTrace(s)
+"""
 
-from src.data_types.time_trace import TimeTrace
+from typing import Protocol
+
+from src.data_types.type_definitions import TimeTraceType
 
 
-@dataclass
-class Transformation(ABC):
+class Transformation(Protocol):
     """
-    A generic operation you perform on a TimeTrace that produces another TimeTrace
-    NOTE: Dependency injection --> only dependencies on generic TimeTraces and Experiments, not on specific implementations
+    Generic operation that adjust time traces, e.g. filtering, translation/rotation, subsection/selecting part of the trace, etc.
     """
 
     # trace identifiers you want to modify
     target_traces: list[str]
 
-    @abstractmethod
-    def apply(self, trace_list: list[TimeTrace]) -> list[TimeTrace]:
+    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
         """
         apply transformation on the target traces to produce new set of traces
+        NOTE:If traces outside the target list are meant to be kept, ensure these get passed on into the output list (without modifications)
         """
         ...

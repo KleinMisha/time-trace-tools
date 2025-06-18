@@ -8,13 +8,14 @@ from src.data_types.experiment import Experiment
 @dataclass
 class ExperimentProcessor:
     """
-    ExperimentProcessor class keeps track of the set of Transformations to perform, applying the transforms is delayed until an explicit call to `transform_traces()`
+    ExperimentProcessor class keeps track of the set of Transformations to perform, applying the transforms is delayed until an explicit call to `run()`
     this way you can change your workflow by undoing/redoing transforms as many times as you want (as it under the hood just reproduces the series of events starting from the initial state)
     """
 
     original_experiment: Experiment
     transformations: list[Transformation] = field(default_factory=list)
     state_index: int = 0
+    _current_experiment: Experiment = field(init=False)
 
     def add_transformation(self, transformation: Transformation) -> None:
         """
@@ -40,7 +41,7 @@ class ExperimentProcessor:
         if self.state_index < len(self.transformations):
             self.state_index += 1
 
-    def transform_traces(self) -> Experiment:
+    def run(self) -> None:
         """
         Only when you call this function will things actually be computed.
         You compute it up until the state index
@@ -49,10 +50,13 @@ class ExperimentProcessor:
         traces = deepcopy(self.original_experiment.traces)
         for transformation in self.transformations[: self.state_index]:
             # keep updating the traces.
-            # NOTE: Edits that are not consecutive --> you would make different ExperimentProcessors for the different workflows
             traces = transformation.apply(traces)
 
         # NOTE: the __class__() method will give type of Experiment this particular implementation is
-        return self.original_experiment.__class__(
-            ID=self.original_experiment.ID, traces=traces
+        id = self.original_experiment.ID
+        self._current_experiment = self.original_experiment.__class__(
+            ID=id, traces=traces
         )
+
+    def get_current_experiment(self) -> Experiment:
+        return self._current_experiment
