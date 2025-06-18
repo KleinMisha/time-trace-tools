@@ -2,7 +2,6 @@
 test the ExperimentProcessor
 """
 
-import numpy as np
 import pytest
 
 from src.data_processing.processor import ExperimentProcessor
