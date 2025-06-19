@@ -242,7 +242,7 @@ class TimeTrace(ABC):
         """
 
         if not new_id:
-            new_id = ""
+            new_id = self.ID
 
         Trace = type(self)
         section_values = tuple(value[start_index:end_index] for value in self._values)
