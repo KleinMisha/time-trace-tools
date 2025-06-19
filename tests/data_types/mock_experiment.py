@@ -58,10 +58,6 @@ class MockExperiment(Experiment[MockTimeTrace]):
     """
 
     def _create_trace_list_from_raw_data(self) -> list[MockTimeTrace]:
-        """
-        Implement how the traces should be instantiated based on the loaded raw data
-        As data from different experiments might have different structures, intentionally left this as abstract method
-        """
         One, Two, time = self._raw_data
         trace_list = []
         for index, (one, two) in enumerate(zip(One.T, Two.T)):
