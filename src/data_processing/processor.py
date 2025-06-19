@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
+from typing import Iterable
 
 from src.data_processing.transformation import Transformation
 from src.data_types.experiment import Experiment
@@ -17,9 +18,14 @@ class ExperimentProcessor:
     state_index: int = 0
     _current_experiment: Experiment = field(init=False)
 
+    def add_transformations(self, transformations: Iterable[Transformation]) -> None:
+        """Register the entire batch of transformations to make defining a pipeline more convenient."""
+        for transformation in transformations:
+            self.add_transformation(transformation)
+
     def add_transformation(self, transformation: Transformation) -> None:
         """
-        register the transformation.
+        Register a (single) new Transformation.
         NOTE: If you undid a transformation (without redoing it), you will at this point 'confirm you actually never wanted to perform that operation'. After registering, we
         assume you want to point to the latest transformation.
         """
