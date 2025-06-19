@@ -261,7 +261,7 @@ def test_create_time_trace_for_section(time_trace: MockTimeTrace) -> None:
     part_of_trace = time_trace.create_time_trace_for_section(start_index=0, end_index=3)
 
     # check default id is working
-    assert part_of_trace.ID == ""
+    assert part_of_trace.ID == time_trace.ID
 
     # check if sectioning / new trace is indeed the correct part of the complete trace
     for values_complete_trace, values_part_of_trace in zip(
