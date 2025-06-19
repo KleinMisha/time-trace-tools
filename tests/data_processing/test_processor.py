@@ -67,6 +67,50 @@ def test_registering_multiple_transformations(experiment: MockExperiment) -> Non
     assert processor.transformations == [transformation_1, transformation_2]
 
 
+def test_add_transformations_list(experiment: MockExperiment) -> None:
+    """use the .add_transformations() to register an iterable of transformations"""
+    # apply to the first 50 traces
+    transformation_1 = MockTransformation(
+        [trace.ID for trace in experiment.traces[:50]]
+    )
+
+    # apply to the remaining traces
+    transformation_2 = MockTransformation(
+        [trace.ID for trace in experiment.traces[50:]]
+    )
+
+    # set up analysis
+    processor = ExperimentProcessor(experiment)
+    processor.add_transformations([transformation_1, transformation_2])
+    assert processor.transformations == [transformation_1, transformation_2]
+
+
+def test_add_transformations_other_iterable(experiment: MockExperiment) -> None:
+    """Quick check to test if it keeps working with other common iterables."""
+    # apply to the first 50 traces
+    transformation_1 = MockTransformation(
+        [trace.ID for trace in experiment.traces[:50]]
+    )
+
+    # apply to the remaining traces
+    transformation_2 = MockTransformation(
+        [trace.ID for trace in experiment.traces[50:]]
+    )
+
+    # set up analysis
+
+    as_list = [transformation_1, transformation_2]
+    as_tuple = tuple(as_list)
+    as_dict_values = dict(first=transformation_1, second=transformation_2).values()
+    as_generator = (transformation for transformation in as_list)
+
+    transformation_iterables = [as_list, as_tuple, as_dict_values, as_generator]
+    for workflow in transformation_iterables:
+        processor = ExperimentProcessor(experiment)
+        processor.add_transformations(workflow)
+        assert processor.transformations == [transformation_1, transformation_2]
+
+
 def test_apply_empty_pipeline(experiment: MockExperiment) -> None:
     """run processor before registering Transformations. Should just result in the original experiment"""
     processor = ExperimentProcessor(experiment)
