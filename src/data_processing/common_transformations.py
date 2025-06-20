@@ -34,7 +34,7 @@ class SelectTracesByLabels:
         return [
             trace.ID
             for trace in trace_list
-            if trace.ID in self.target_labels
+            if trace.ID in self.target_traces
             and set(trace.labels) == set(self.target_labels)
         ]
 
