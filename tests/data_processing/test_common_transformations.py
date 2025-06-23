@@ -6,6 +6,7 @@ from src.data_processing.common_transformations import (
     SelectTimeWindow,
     SelectTraces,
     SelectTracesByLabels,
+    ShiftToOrigin,
 )
 from src.data_processing.processor import ExperimentProcessor
 from tests.data_types.mock_experiment import (
@@ -103,7 +104,6 @@ def test_select_time_window(experiment: MockExperiment) -> None:
     midway_the_trace = experiment.traces[0].t[half_index]
 
     first_half_of_traces = [f"trace_{i + 1}" for i in range(NUMBER_MOCK_TRACES // 2)]
-    print(duration, quarter_of_the_trace, midway_the_trace)
 
     # prep and perform analysis
     processor = ExperimentProcessor(experiment)
@@ -130,3 +130,72 @@ def test_select_time_window(experiment: MockExperiment) -> None:
             )
         else:
             assert time_range == (0.0, duration)
+
+
+def test_shift_to_origin(experiment: MockExperiment) -> None:
+    """positive case: test new traces are indeed starting from the origin (along the specified axis)"""
+
+    # apply to all traces
+    trace_ids = [trace.ID for trace in experiment.traces]
+
+    # original traces already start at t=0, so let's change this first
+    for trace in experiment.traces:
+        trace.t += 10.0  # anything other than 0.0 will do
+
+    # prep and perform analysis
+    processor = ExperimentProcessor(experiment)
+    processor.add_transformation(
+        ShiftToOrigin(target_traces=trace_ids, coordinate="value_one")
+    )
+    processor.run()
+
+    # check shift worked
+    for trace in processor._current_experiment.traces:
+        assert (trace.t[0] == 0.0) and (trace.value_one[0] == 0.0)
+
+
+def test_shift_to_origin_invalid_coordinate(experiment: MockExperiment) -> None:
+    """negative case: check that you raise an exception trying to operate on an axis that is not available"""
+
+    # apply to all traces
+    trace_ids = [trace.ID for trace in experiment.traces]
+
+    # prepare analysis
+    processor = ExperimentProcessor(experiment)
+    processor.add_transformation(
+        ShiftToOrigin(target_traces=trace_ids, coordinate="value_three")
+    )
+
+    # check operation fails
+    with pytest.raises(
+        AttributeError,
+        match="Trace trace_1 does not have a value-array named value_three",
+    ):
+        processor.run()
+
+
+def test_shift_does_not_affect_original_trace(experiment: MockExperiment) -> None:
+    """
+    double-check that original traces remain unaffected. Mainly because Transformation is a Protocol, not an ABC inherited by ShiftToOrigin.
+    Hence, cannot generally check only the target_traces are effected. Especially on this transform where you actually modify the values, it is extra important to keep the original in tact.
+    """
+
+    # apply to all traces
+    trace_ids = [trace.ID for trace in experiment.traces]
+
+    # original traces already start at t=0, so let's change this first
+    for trace in experiment.traces:
+        trace.t += 10.0  # anything other than 0.0 will do
+
+    # prep and perform analysis
+    processor = ExperimentProcessor(experiment)
+    processor.add_transformation(
+        ShiftToOrigin(target_traces=trace_ids, coordinate="value_one")
+    )
+    processor.run()
+
+    # Now check that the original traces remained unaffected
+    # check shift worked
+    # NOTE: I could've explicitly tested for the value I know it should be, but does not matter
+    for trace in processor.original_experiment.traces:
+        assert (trace.t[0] != 0.0) and (trace.value_one[0] != 0.0)
