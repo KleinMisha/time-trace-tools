@@ -2,8 +2,7 @@
 Writing `Experiment`, and `TimeTrace` info to files
 
 
-todo: write labels / section labels to files
-todo:
+!check if this is actually implemented properly. Cannot remember making this code to be honest.
 """
 
 from pathlib import Path
