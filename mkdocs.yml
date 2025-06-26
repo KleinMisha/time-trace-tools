@@ -1,0 +1,24 @@
+site_name: pytweezers-tools
+
+nav: 
+  - Home: index.md 
+  - Installation: installation.md 
+  - Quick start guide: quick_start.md
+  - Software design / library overview: software_design.md
+  # - Packages:
+  #   - data_io: data_io.md 
+  #   - data_types: data_types.md 
+  #   - data_processing: data_processing.md  
+  # - Guidelines for developers: developer_notes.md
+  # - Versions: CHANGELOG.md 
+
+
+theme:
+  name: material
+  
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+
