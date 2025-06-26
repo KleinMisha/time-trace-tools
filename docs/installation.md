@@ -31,15 +31,6 @@ uv pip sync -d
 **NOTE: use the `-d` tag to also install `pytest`: needed for development**
 
 
-### using `conda`
-<span style="color:#FF8282">**NOTE: conda environment not (as frequently) maintained. For accurate dependencies use `uv`.** </span>
-
-Using the `conda` environment. Dependencies are listed in the `environment.yml` file
-```bash
-conda env create --file environment.yml 
-conda activate pytw_tools
-``` 
-
 ## VS-code setup
 For VS-code users, this repository contains a `.vscode` directory. 
 - `.vscode/settings.json` contains all IDE settings, including those for typechecking, pytest, spell checking, and more. 
