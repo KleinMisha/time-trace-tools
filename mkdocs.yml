@@ -9,12 +9,13 @@ nav:
   #   - data_io: data_io.md 
   #   - data_types: data_types.md 
   #   - data_processing: data_processing.md  
-  # - Guidelines for developers: developer_notes.md
+  - Guidelines for developers: developer_notes.md
   # - Versions: CHANGELOG.md 
 
 
 theme:
   name: material
+
   
 markdown_extensions:
   - pymdownx.superfences:
