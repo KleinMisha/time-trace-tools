@@ -158,3 +158,69 @@ Some guidelines for working with the repository.
 * Add your changes in the `docs/CHANGELOG.md`.
 * Tell `uv` to also bump the version accordingly. Just to make the `pyproject.toml` be up-to-date (not an issue if you forget to do this.). 
 
+```mermaid
+---
+title: Example Git workflow 
+---
+gitGraph
+   commit id: "start"
+   commit id:"first commit"
+   branch develop
+   checkout develop
+   commit id: " " 
+   branch feature/save_time_traces
+   checkout feature/save_time_traces
+   commit id: "wrote function to export."
+   commit id: "!Failing tests, continue later."   
+   
+   branch feature/experiment_processor
+   commit id:"Defined a Transformation. **passed unit tests**"
+   commit id:"Created the ExperimentProcessor" 
+   commit id:"Transformation implementations"
+   commit id: "passed the unit tests"
+   checkout develop 
+   merge feature/experiment_processor
+
+   branch feature/output_experiment_processor
+   checkout feature/output_experiment_processor
+   commit id: "create a TOML with instructions" 
+   commit id: "passed unit tests" 
+   checkout develop
+   merge feature/output_experiment_processor
+   
+
+   branch feature/documentation
+   checkout feature/documentation
+   commit id:"created mkdocs index page"
+   commit id:"quick start guide" 
+   commit id:"developer notes"
+   commit id:"software design"
+   commit id:"data_io"
+   commit id: "data_types"
+   commit id: "data_processing" 
+   checkout develop 
+   merge feature/documentation
+
+   checkout main
+   merge develop 
+   commit id: "changelog updated" 
+   commit id:"bumped major version" tag: "v1.0.0" type:HIGHLIGHT
+
+   checkout feature/save_time_traces
+   commit id:"fixed issue ...., unit tests passed"
+   checkout develop 
+   merge feature/save_time_traces
+   checkout main
+   merge develop 
+   commit id: "changelog updated" 
+   commit id:"bumped minor version" tag: "v1.1.0" type:HIGHLIGHT
+   branch hotfix 
+   checkout hotfix 
+   commit id: "Fixed small typo" 
+   checkout main
+   merge hotfix 
+   commit id: "changelog updated" 
+   commit id:"bumped patch" tag: "v1.1.1" type:HIGHLIGHT
+
+
+```
