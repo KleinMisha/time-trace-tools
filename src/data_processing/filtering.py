@@ -9,7 +9,7 @@ from typing import Optional
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.signal import firwin, kaiserord, lfilter
+from scipy.signal import filtfilt, firwin, kaiserord
 
 from src.data_types.type_definitions import TimeTraceType
 
@@ -26,31 +26,25 @@ class KaiserBesselFilter:
     coordinate: str
     acquisition_frequency: float = 58.0
     cutoff_frequency: float = 2.0
-    transition_width: float = 0.01  # fraction of nyquist frequency
-    stop_band_attenuation_dB: float = 100
+    transition_width: float = 0.01  # relative to nyquist frequency. So width in Hz = width * acquisition_frequency /2
+    stopband_attenuation_dB: float = 100
 
     def filter(
         self, time: NDArray[np.floating], signal: NDArray[np.floating]
     ) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
         """apply the Kaiser-Bessel filter to a single time trace. "signal" is the value array named self.coordinate."""
         # Create Finite Impulse Response (FIR) filter window. Kaiser-Bessel window of order N and with parameter beta.
-        N, beta = kaiserord(self.stop_band_attenuation_dB, self.transition_width)
+        N, beta = kaiserord(self.stopband_attenuation_dB, self.transition_width)
         nyquist_frequency = self.acquisition_frequency / 2.0
         fir_coefficients = firwin(
             N,
             self.cutoff_frequency / (nyquist_frequency),
-            window=("kaiser",),  # type: ignore (type hint is incorrect in SciPy)
+            window=("kaiser", beta),  # type: ignore (type hint is incorrect in SciPy)
         )
 
-        # use the filter
-        filtered_signal: np.ndarray = lfilter(fir_coefficients, 1.0, signal)  # type: ignore (Again, a bit inconvenient type hints in SciPy itself)
-
-        # in rare cases this value is not quite correct and the filtered trace is shifted compared to the raw trace --> adjust this value
-        delay = 0.5 * (N - 1) / self.acquisition_frequency
-        new_time_points = np.where((time - delay) >= 0)
-        new_time = time[new_time_points[0][0] :] - delay
-        new_signal = filtered_signal[new_time_points[0][0] :]
-        return new_time, new_signal
+        # use the filter (NOTE: the `filtfilt` function undoes the delay created by the `lfilter` function we used previously)
+        filtered_signal: np.ndarray = filtfilt(fir_coefficients, 1.0, signal)
+        return time, filtered_signal
 
     # todo: Take care of duplicate code?
     # ? make some 'subtype' of Transformation that acts on a given coordinate? Inherit from Transformation?
