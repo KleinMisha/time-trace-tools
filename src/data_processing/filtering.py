@@ -96,3 +96,42 @@ class KaiserBesselFilter(Filter):
         # use the filter (NOTE: the `filtfilt` function undoes the delay created by the `lfilter` function we used previously)
         filtered_signal: np.ndarray = filtfilt(fir_coefficients, 1.0, raw_signal)
         return time, filtered_signal
+
+
+@dataclass
+class MovingAverageFiler(Filter):
+    r"""
+    Sliding window filter
+    ---
+    Time-domain impulse response:
+    h[n] = 1/M for  0<=n<=M , 0 else
+
+    Window size is calculated based on the desired time window and acquisition frequency as:
+    M = T * f_acq
+
+    Hence, the output signal y[n] is calculated from the input signal x[n] using
+    y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k]
+
+    NOTE: To deal with the first M windows, the average is taken over the available points,
+         effectively ramping up the size M at the beginning and scaling it down at the end.
+    """
+
+    time_window: float
+    acquisition_frequency: float = 58.0
+
+    def __post_init__(self):
+        """Determine window size upon instantiation"""
+        self._window_size = int(self.time_window * self.acquisition_frequency)
+
+    def filter(
+        self, time: NDArray[np.floating], raw_signal: NDArray[np.floating]
+    ) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
+        """apply the moving average filter to a single time trace. "signal" is the value array named self.coordinate."""
+        M = self._window_size
+        filtered_signal = []
+        for n in range(len(raw_signal)):
+            start = max(0, n - M + 1)
+            filtered_signal.append(np.mean(raw_signal[start : (n + 1)]))
+
+        filtered_signal = np.array(filtered_signal)
+        return time, filtered_signal
