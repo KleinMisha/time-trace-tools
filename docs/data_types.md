@@ -349,5 +349,5 @@ The same goes for adding/excluding individual `TimeTrace` instances from the `Ex
     experiment: ExperimentType  
 
     # .. in this one line of actual code you need to write. 
-    excl_ugly_trace = experiment - ugly_trace 
+    exclude_ugly_trace = experiment - ugly_trace 
     ```
