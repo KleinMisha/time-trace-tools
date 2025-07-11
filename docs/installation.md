@@ -1,11 +1,13 @@
 # Installation
 Dependencies are manged using `uv` ([uv website for installation instructions](https://docs.astral.sh/uv/)): This is much faster, and more easy to use than `pip` or `conda`. It is also based on using the more modern setup with a `pyproject.toml` file. Dependencies, and other project details, are listed in the `pyproject.toml` file. Dependency managers like `uv` use the `uv.lock` file to specify specific versions of packages used.
 
-> <span style="color:#83FFE1"> **To use the code, you do not need to clone this repository. If not developing the code, it is recommended to simply list this GitLab repository as a dependency. That way you can import everything within this package in your own code and use it like any other library.**
-</span>
+???+ tip 
+
+    To use the code, you do not need to clone this repository. If not developing the code, it is recommended to simply list this GitLab repository as a dependency. That way you can import everything within this package in your own code and use it like any other library.
+
 
 ## Users (non-developers). 
-To include this library as one of the dependencies for your own project, <span style="color:#83FFE1">***you do not need to clone this repository***</span>. Instead, simply add the following into your `pyproject.toml`. 
+To include this library as one of the dependencies for your own project ***you do not need to clone this repository***. Instead, simply add the following into your `pyproject.toml`. 
 
 ```TOML
 [tool.uv.sources]
@@ -28,7 +30,11 @@ Once `uv` is installed, you can setup your `.venv`(will be created inside your c
 uv venv create 
 uv pip sync -d 
 ```
-**NOTE: use the `-d` tag to also install `pytest`: needed for development**
+
+???+ note 
+    use the `-d` tag to also install `pytest`: needed for development. 
+
+
 
 
 ## VS-code setup
