@@ -1,7 +1,7 @@
+???+ Info 
+    The information on this page is only relevant for those who want to modify/add the code directly. If this is you, please read the following carefully.
+
 # Guidelines for developers. 
-
-**The information on this page is only relevant for those who want to modify/add the code directly. If this is you, please read the following carefully.**
-
 
 Maintaining a clean code base is not much different from maintaining a clean laboratory space. There are a bunch of tools that can make it easier to keep things organized in the lab (the eLabJournal, a cleaning schedule, an inventory list, booking system for setups, etc.), but we still have to actively adhere to these guidelines/rules for everything to work properly. Essentially the same can be said about maintaining a neat software package. 
 Perhaps one of the simplest, yet very important, rules is to maintain some form of consistency. Every software package might have slight differences in their style of writing/versioning. Adhering to whatever choice has been made at the start just makes the entire code allot easier to read. 
@@ -9,15 +9,18 @@ Here are some guidelines/rules/already made choices on all aspects important for
 
 
 ## Tools 
-- Python dependency management:  `uv`
-- Code versioning/ track changes: `git`
-- Code formatting: `ruff` (for `VScode` users: extension is available and configured)
-- Use a spell checker that supports code (for `VScode` users: extension is available and configured)
-- Code tests / unit tests: `pytest` (Coverage reports generated using `pytest-cov`). 
+| Tool | Description|
+|------|------------|
+|`uv`  | `Python` dependency management|
+|`git` | Code versioning / track changes| 
+|`ruff`| Code formatting (for `VScode` users: extension is available and configured)|
+|`pytest`| Code tests/ unit tests (Coverage reports generated using `pytest-cov`)| 
+
 
 ## Directory structure 
 To keep things consistent, adhere to the current structure. 
-* The root only contains some configuration files (`pyproject.toml`, `mkdocs.yml`), a `README.md`, a `.gitignore` file, etc.
+
+* The root only contains some configuration files (`pyproject.toml`, `mkdocs.yml`, `.gitignore`, etc.), and a  `README.md`. 
 * Code is stored under `src/`
 * Corresponding unit tests are stored under `tests/`. 
 * The structure of the `tests/` directory follows that of the `src/` directory. That is, unit tests for `src/data_types/time_trace.py` are written in `tests/data_types/test_time_trace.py`. 
@@ -104,11 +107,12 @@ PI = 3.1415
   import toml 
   ```
 
-* Try to avoiding a long list of `if/else` statements. 99% of the time these are a sign of suboptimal design choices. If you find yourself using such a list of `if/else` statements (longer than simple ones), try discussing with others. Most likely there is some combination of defining functions or introducing abstraction possible. This is one of the best ways to make the code much more readable. 
-* The same applies to any set of nested `for` loops with indendent `if/else` clauses leading to a `while` loop, ... ;-). There most likely is a better way. 
+* Try avoiding long lists of `if/else` statements. 99% of the time these are a sign of suboptimal design choices. If you find yourself using such a list of `if/else` statements (longer than simple ones), try discussing with others. Most likely there is some combination of defining functions or introducing abstraction possible. This is one of the best ways to make the code much more readable. 
+* The same applies to any set of nested `for` loops with indented `if/else` clauses leading to a `while` loop, ... ;-). There most likely is a better way. 
 
 
 Some additional choices made: 
+
 - the type of a `Numpy` array: Use `NDArray[np.floating]`. More conventional is to use `np.ndarray`, but that does not allow you to prescribe the type of the elements. 
 - `Numpy` is a bit particular and works with `np.floating` and `np.integer` in stead of the primary types `float` and `int`. Hence, when applicable, just make use of the type aliases defined as follows: 
     ```python 
@@ -140,23 +144,23 @@ coverage html
 ## Git Repository 
 Some guidelines for working with the repository. 
 
-* The `main` branch only contains code that is tested and fully integrated. Do not amend this code unless it is to fix a typo or something small. 
+* The `main` branch only contains code that is **tested and fully integrated**. Do not amend this code unless it is to fix a typo or something small. 
 * Make often `commits`. Try to group files together that pertain to the same change. Try to break up large amendments into several `commits`. This makes the commit history easier to track and forces you to break up the problem into smaller bits. 
-* Every bug fix or feature gets its own branch where you can implement it without problem. Stick to one (main) feature per branch! Grouping many changes into one `new_feature_branch` makes it harder to track what is added. Also makes it very hard to revert to a point before a specific feature was implemented / localize bugs. Having more branches with just a couple commits is less clutter than having one branch with hundreds of commits. 
-* Name your branch as follows 
-  * `feature/<feature>`
-  * `issue/<issue>`
-  * `hot_fix/<small issue>`
+* Every feature (or bug fix) gets its own branch where you can implement (or fix) it without problem. **Stick to one (main) feature per branch**. Grouping many changes into one `new_feature_branch` makes it harder to track what is added. Also makes it very hard to revert to a point before a specific feature was implemented / localize bugs. Having more branches with just a couple commits is less clutter than having one branch with hundreds of commits. 
+* Name your branch as follows (following standard naming conventions here)
+    - `feature/<feature>`
+    - `issue/<issue>`
+    - `hot_fix/<small issue>`
 * Feature and issue branches branch of from the `develop` branch. When done, i.e. you new feature is implemented and you pass your unit tests, you integrate it with the other code by merging into the `develop` branch. 
 * The `develop` branch thus serves as a safe way to test how code integrates together. 
 * When all is fine, merge into `main` to update the "user facing code". 
 * When merging with `main`, create a new `version` by telling `git` to add a `version tag`.
-  * vX.Y.Z
-    * X: major version. Big changes. Say a bunch of new additions have been made to allow for a whole new type of experimental data. Also bump the major version when the change might affect backwards compatibility. 
-    * Y: minor version. Adding a new feature that stacks onto the existing without affecting backwards compatibility. Major vs minor version is a bit of a gray area. Decide on some internal standards. 
-    * Z: bug fixes and other small updates. Use this when you did not add any new functionality, but just updated a small part to fix a bug. 
+  * standard version naming convention `vX.Y.Z`:
+    * `X`: major version. Big changes. Say a bunch of new additions have been made to allow for a whole new type of experimental data. Also bump the major version when the change might affect backwards compatibility. 
+    * `Y`: minor version. Adding a new feature that stacks onto the existing without affecting backwards compatibility. Major vs minor version is a bit of a gray area. Decide on some internal standards. 
+    * `Z`: bug fixes and other small updates. Use this when you did not add any new functionality, but just updated a small part to fix a bug. 
 * Add your changes in the `docs/CHANGELOG.md`.
-* Tell `uv` to also bump the version accordingly. Just to make the `pyproject.toml` be up-to-date (not an issue if you forget to do this.). 
+* Tell `uv` to also bump the version accordingly. Just to make the `pyproject.toml` be up-to-date (not an issue if you forget to do this as we are not publishing this package to PyPi or similar.). 
 
 ```mermaid
 ---
