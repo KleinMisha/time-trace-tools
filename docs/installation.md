@@ -13,9 +13,15 @@ To include this library as one of the dependencies for your own project ***you d
 [tool.uv.sources]
 pytweezer_tools = { git = 'ssh://git@gitlab.com/DulinlabVU/pytweezer-tools.git', tag = <VERSION TAG>}
 ```
+
+???+ tip 
+    replace ```<VERSION TAG>``` with the version of choice for maximum reproducibility of your code
+
+
+
 Next, run 
 
-```bash
+```zsh
 uv run python your_python_script.py
 ```
 to let `uv` take care of building/installing all required packages into a `.venv/` directory before running your code. 
@@ -32,7 +38,7 @@ uv pip sync -d
 ```
 
 ???+ note 
-    use the `-d` tag to also install `pytest`: needed for development. 
+    use the `-d` tag to also install tools needed for development such as `pytest`(not included as a strict dependency as the code can be executed without of course needed for development). 
 
 
 
