@@ -3,11 +3,35 @@
 The `data_types` package offers convenient data representation to facilitate handling experimental data.
 
 ##  `TimeTrace` 
-Fundamentally, single-molecule experiments will produce time-trajectories, or time traces. Using some convenient abstraction, a generic `TimeTrace` is defined to have some time-array, and any number of named value arrays of the same length. See the second tab for the specific implementation valid for traces of magnetic tweezers. 
+Fundamentally, single-molecule experiments will produce time-trajectories, or time traces. Using some convenient abstraction, a generic `TimeTrace` is defined to be anything that: 
 
-=== "Abstraction" 
+1. has a time-array,
+ 
+    and     
 
-    ```python linenums="1" hl_lines="13-14 18 26" title="A generic time trace has some identifier/name and a time-array. "
+2. any number of named value arrays of the same length. 
+
+See the later tabs for the specific implementation valid for traces of magnetic tweezers. 
+
+=== "Abstraction"
+    A simple `TimeTrace` has a name (`ID`), an array of times (`t`), and any number of additional named arrays.  
+    ```mermaid
+    classDiagram 
+        class TimeTrace{
+        +str: ID
+        +NDArray[np.floating]: t 
+        ---
+        abstract: 
+        +NDArray[np.floating]: value_one 
+        +NDArray[np.floating]: value_two
+        ... 
+
+        +_values()*: tuple~NDArray~np.floating~~
+        }
+    ```
+
+=== "Abstraction (Code)" 
+    ```python linenums="1" hl_lines="13-14 18 26" title="Abstract Base Class for a TimeTrace."
     from abc import ABC, abstractmethod
     from dataclasses import dataclasses 
     from numpy.typing import NDArray 
@@ -34,8 +58,20 @@ Fundamentally, single-molecule experiments will produce time-trajectories, or ti
             used to instantiate class instance.
             """
     ```
+=== "Magnetic tweezers"
+    A `MagneticTweezersTrace` is a `TimeTrace` with values named `x`,`y`, and `z` to represent the bead's coordinates. 
+    ```mermaid
+    classDiagram 
+        class MagneticTweezersTrace{
+        +str: ID
+        +NDArray[np.floating]: t 
+        +NDArray[np.floating]: x 
+        +NDArray[np.floating]: y
+        +NDArray[np.floating]: z
+        }
+    ```
 
-=== "magnetic tweezers" 
+=== "Magnetic tweezers" 
 
     ```python linenums="1" hl_lines="11-13 20 24" title="magnetic tweezers have x,y,z coordinates as their value arrays"
     
@@ -83,19 +119,42 @@ mt_trace = MagneticTweezersTrace(
 In addition to an identifier and a time-array, a generic `TimeTrace` may be assigned any number of (qualitative) labels.
 The same principle can be applied by assigning labels not to the entire trace, but to a particular section identified by the time frames / indices this section starts/stops at. 
 
-```python linenums="1" 
-    from abc import ABC, abstractmethod
-    from dataclasses import dataclasses 
-    from numpy.typing import NDArray 
-    import numpy as np 
 
-    class TimeTrace(ABC):
-        """ A time trace at least has an identifier, a time-array, and at least one named value array"""
-        ID: str
-        t: NDArray[np.floating]
-        labels: list[str] = field(default_factory=list)
-        section_labels: dict[tuple[int, int], list[str]] = field(default_factory=dict)
-```
+
+=== "Class" 
+    A `TimeTrace` also has qualitative labels.
+    
+    ```mermaid
+    classDiagram 
+        class TimeTrace{
+        +str: ID
+        + NDArray[np.floating]: t 
+        +list[str]: labels
+        + dict[tuple[int, int], list[str]]: section_labels
+        ---
+        abstract: 
+        +NDArray[np.floating]: value_one 
+        +NDArray[np.floating]: value_two
+        ... 
+
+        +_values()*: tuple~NDArray~np.floating~~
+        }
+    ```
+
+=== "Code Implementation" 
+    ```python linenums="1" 
+        from abc import ABC, abstractmethod
+        from dataclasses import dataclasses 
+        from numpy.typing import NDArray 
+        import numpy as np 
+
+        class TimeTrace(ABC):
+            """ A time trace at least has an identifier, a time-array, and at least one named value array"""
+            ID: str
+            t: NDArray[np.floating]
+            labels: list[str] = field(default_factory=list)
+            section_labels: dict[tuple[int, int], list[str]] = field(default_factory=dict)
+    ```
 For example, if a trace shows the signature of enzymatic activity
 
 === "full trace"
@@ -224,11 +283,33 @@ trace_1 == trace_4 # False: different value array
 
 
 ## `Experiment` 
-An `Experiment` is our go-to container for a set of `TimeTrace` objects 
+An `Experiment` is our go-to container for a set of `TimeTrace` objects and is defined as anything that has
+
+1. a list of `TimeTrace` objects, 
+   
+    and
+
+2. a (path to) a raw data file. 
+
+As the parsing the raw data into the list of `TimeTrace` objects can vary based on the type setup, experiment, and more importantly, the type of `TimeTrace` appropriate, a layer of abstraction is introduced.  
+
+=== "Abstraction" 
+    An `Experiment` has a name (`ID`) and a set of `TimeTrace` instances. 
+
+    ```mermaid
+    classDiagram 
+        class Experiment{
+        +str: ID
+        +list[TimeTrace]: traces
+        + Path|str: path_to_raw_data  
+
+        +_create_trace_list_from_raw_data_()*: list[TimeTrace]
+        }
+    ```
 
 === "Abstraction"
 
-    ```python linenums="1" hl_lines="26-28 32" title="from experiment.py"
+    ```python linenums="1" hl_lines="26-28 32" title="using python generic types to build the abstract base class for the Experiment."
     from abc import ABC, abstractmethod
     from dataclasses import dataclass, field
     from pathlib import Path
@@ -268,9 +349,10 @@ An `Experiment` is our go-to container for a set of `TimeTrace` objects
             pass
     ```
 
-=== "magnetic tweezers"
 
-    ```python linenums="1" hl_lines="9-26" title="from magnetic_tweezers_experiment.py"    
+=== "Magnetic tweezers"
+
+    ```python linenums="1" hl_lines="9-26" title="specific case of building MagneticTweezerTrace instances from the raw data."    
     
     from src.data_types.experiment import Experiment
     from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
