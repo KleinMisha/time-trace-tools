@@ -2,35 +2,32 @@
 Here, we detail some software architectural choices / the goal of this software package in broad strokes. 
 
 ## Desired (user) experience stories
-The following formulates the set of <span style = "color:#ADEED9">requirements</span> this software library must have to achieve the following <span style="color:#FFE99A">goals</span>.
+The following formulates the set of ***requirements*** this software library must have to achieve the following **goals**.
+This software should provide the user with ...
+
+- A **toolkit** with functions, classes, and objects that can be imported into any other dedicated data analysis pipeline. Creation of ***a GUI is is not a concern of this project*** as that should be a series of interactive components that call the elements available in this library.  
+- A convenient syntax to apply most data processing pipelines to most data sets with the same relative ease . 
+A user can easily load and manipulate data from all of our experimental setups (MT, MT-TIRF, old interface / new interface, etc.) in a unified manner. 
+
+- modules for parsing data acquired with different setups, controlling software / frameworks. The data should be parsed into a unified format for postprocessing. 
+- Create a generalized internal representation of experimental data for us to manipulate time traces from either magnetic tweezers or fluorescence experiments similarly. 
+- Simplify the default output file, making it easier to interpret and reuse data in the lab. 
 
 
+>The user should have the flexibility to apply any desired postprocessing pipeline to its respective data. Applying any kind of pipeline should happen at the same relative ease.
+
+-  ***Same syntax, regardless of assay***. Treat force spectroscopy, torque spectroscopy, as well as fluorescent, and FRET time traces with the same operations. In an abstract sense, ***these all deal with time traces***. 
+- ***Flexibility*** to change the order of operations in postprocessing and analyzing data. For example, while assays may require you to filter the traces as the first step in the process, others may require to perform some other manipulations beforehand. 
 
 
-><span style = "color:#FFE99A">Generally speaking, this software should provide the user with ...</span>
-- A <span style = "color:#ADEED9">toolkit</span> with functions, classes, and objects that can be imported into any other dedicated data analysis pipeline. Creation of <span style = "color:#ADEED9">*a GUI is is not a concern of this project*</span> as that should be a series of interactive components that call the elements available in this library.  
-- A <span style = "color:#ADEED9">convenient syntax </span> to apply most <span style = "color:#ADEED9">data processing pipelines</span> to most <span style = "color:#ADEED9">data sets</span> with the same <span style = "color:#ADEED9">relative ease</span>. 
-><span style = "color:#FFE99A">A user can easily load and manipulate data from all of our experimental setups (MT, MT-TIRF, old interface / new interface, etc.) in a unified manner </span>
+>The code in this repository should be as easy to read as possible. Prioritize readability over feature depth / complexity. 
 
-- modules for parsing <span style = "color:#ADEED9">data acquired with different setups, controlling software / frameworks</span>. The data should be parsed into a unified format for postprocessing. 
-- Create a generalized internal representation of experimental data for us to <span style = "color:#ADEED9"> manipulate time traces from either magnetic tweezers or fluorescence experiments similarly</span>. 
-- Simplify the <span style = "color:#ADEED9">default output files</span>, making it easier to interpret and reuse data in the lab. 
+- Reduce coupling: loading data and processing data are different concerns and should be done using dedicated modules (packages). 
+- Well-written code can be 'self-documenting' for the most part. Adding type hints to a carefully chosen name for a function and its input / output variables leaves little doubt on what it does and how it should be used. 
+- Try to adopt some standard best practices for ***versioning***, ***testing***, and ***maintaining*** a python package. 
 
 
-><span style = "color:#FFE99A">The user should have the flexibility to apply any desired postprocessing pipeline to its respective data. Applying any kind of pipeline should happen at the same relative ease. </span>
-
-- <span style = "color:#ADEED9">Same syntax, regardless of assay</span>. Treat force spectroscopy, torque spectroscopy, as well as fluorescent, and FRET time traces with the same operations. In an abstract sense, these <span style = "color:#ADEED9">all deal with time traces</span>. 
-- Flexibility to <span style = "color:#ADEED9">change the order of operations</span> in postprocessing and analyzing data. For example, while assays may require you to filter the traces as the first step in the process, others may require to perform some other manipulations beforehand. 
-
-
-><span style = "color:#FFE99A">The code in this repository should be as easy to read as possible. Prioritize readability over feature depth / complexity. </span>
-
-- Reduce coupling: loading data and processing data are <span style = "color:#ADEED9">different concerns</span> and should be done using <span style = "color:#ADEED9">dedicated modules (packages)</span>. 
-- <span style = "color:#ADEED9">Well-written code can be 'self-documenting'</span> for the most part. Adding type hints to a carefully chosen name for a function and its input / output variables leaves little doubt on what it does and how it should be used. 
-- Try to adopt some standard best practices for <span style = "color:#ADEED9">versioning</span>, <span style = "color:#ADEED9">testing</span>, and <span style = "color:#ADEED9">maintaining</span> a python package. 
-
-
-- See <span style = "color:hotpink"><u>**REFERENCE THE PAGE WITH NOTES FOR CONTRIBUTORS/DEVELOPERS** </u></span>. 
+- See [Guidelines for developers](developer_notes.md)
 
 
 
@@ -61,18 +58,14 @@ flowchart
         writeExperiment>write <code>TimeTrace</code> or <br><code>Experiment</code> to file]
     end
 
-style **data_io/** fill:#4DA8DA, stroke:white, color:black
-style **data_types/** fill:#80D8C3, stroke:white, color:black
-style **data_processing/** fill:#FFD66B, stroke:white, color:black
 ```
 The code is organized based on the natural flow of data. 
 
+----------
 ### `data_io`
 Contains modules for reading raw experimental data and for writing the results of analysis performed on the data. These modules are likely the most specific to the type of experimental setup used in the lab (especially the reading of data). It is also likely the part to be subject to the most change over time (especially the format results are stored as). Splitting off these functionalities into their own package therefore enforces one to make the other components of this library to be reusable / adjustable to any type of input/output format. 
 
-
-<span style = "color:hotpink"><u>**REFERENCE THE DATA_IO PAGE** </u></span>
-
+----------
 ### `data_types`
 After parsing your raw data file, you need an internal representation of the data that makes it convenient to manipulate. 
 This package introduces two core classes: `TimeTrace` and `Experiment`. 
@@ -107,10 +100,10 @@ Concrete implementations (e.g. `MagneticTweezersExperiment` and `MagneticTweezer
 + `_values()` :: A method that defines the value arrays of the `TimeTrace`. 
 + `_create_trace_list_from_raw_data()`:: A method that prescribes how to parse loaded raw data into the prescribed form of `TimeTrace` instances. 
 
-<span style = "color:hotpink"><u>**REFERENCE THE DATA_TYPES PAGE** </u></span>. Both the parent classes and the concrete implementations contain several convenience methods for basic manipulations. 
+Both the parent classes and the concrete implementations contain several convenience methods for basic manipulations. 
 
 
-
+------------
 ### `data_processing`
 Finally, this package concerns itself with analysis of the data. 
 It introduces the following core concepts: `Transformation` and `ExperimentProcessor`. 
@@ -145,31 +138,20 @@ classDiagram
     }
 ```
 
-Transformations are only applied when you call the `.run()` method. The `ExperimentProcessor` keeps track of where in the pipeline (list of transformations) you are at, and applies all transformations from the start upon a call to `.run()`. In turn, `data_io` has methods to write the output of an `ExperimentProcessor` to a TOML file containing only the set of instructions to redo all the desire transformations on your raw data. This reduces the amount of intermediate files stored by default and makes things more uniform across different kinds of experiments. See the [See the Quick start guide](#quick-start-guide).
+Transformations are only applied when you call the `.run()` method. The `ExperimentProcessor` keeps track of where in the pipeline (list of transformations) you are at, and applies all transformations from the start upon a call to `.run()`. In turn, `data_io` has methods to write the output of an `ExperimentProcessor` to a TOML file containing only the set of instructions to redo all the desire transformations on your raw data. This reduces the amount of intermediate files stored by default and makes things more uniform across different kinds of experiments. For more info see [data_processing](data_processing.md).
 
-<span style = "color:hotpink"><u>**REFERENCE THE QUICK START GUIDE** </u></span>
-
-
-<span style="color:#FFE99A">For more info see `data_processing/README.md`. </span>
-
+------------
 ## Show high-level class diagrams / workflow diagrams 
 The core concepts introduced above interact with the following basic workflow in mind: 
-
-<span style = "color:hotpink"><u>**REFERENCE THE QUICK START PAGE** </u></span>
-
-
-
-
-
 
 ```mermaid
 graph LR
     %% Node styles    
-    classDef fileNode fill:#white,stroke:#4DA8DA,stroke-width:2px, color:white
-    classDef dataIO fill:#4DA8DA, stroke:white, color:black, stroke-width:1px
-    classDef dataTypes fill:#80D8C3, stroke:white, color:black,stroke-width:1px
-    classDef dataProcessing fill:#FFD66B, stroke:white, color:black,stroke-width:1px
-    classDef placeholder fill:none, stroke:#FFD66B, color:#FFD66B,stroke-dasharray: 4 2, stroke-width:1px
+    classDef fileNode fill:stroke-width:2px, color:white
+    classDef dataIO  color:black, stroke-width:1px
+    classDef dataTypes  color:black,stroke-width:1px
+    classDef dataProcessing  color:black,stroke-width:1px
+    classDef placeholder fill:none, color:#FFD66B,stroke-dasharray: 4 2, stroke-width:1px
 
   
 
@@ -207,7 +189,7 @@ graph LR
 ```
 
 1. Perform the single-molecule experiment to generate the raw data file 
-2. Instantiate an `Experiment` object (`MagneticTweezersExperiment` with working with the magnetic-tweezers) by supplying both the raw data file and a function from `data_io` that reads this type of file. The output of the function is standardized (<span style = "color:hotpink"><u>**REFERENCE THE DATA_IO PAGE** </u></span>). Hence, a concrete `Experiment` knows how to parse this into concrete `TimeTrace` objects. 
-3. Create an `ExperimentProcessor` by supplying your `Experiment`
-4. Register your desired set of manipulations / `Transformation` instances and run the analysis. 
-5. Store the instructions to redo this analysis into a `TOML` file.
+2. Instantiate an `Experiment` object (`MagneticTweezersExperiment` with working with the magnetic-tweezers) by supplying both the raw data file and a function from [`data_io`](data_io.md) that reads this type of file. The output of the function is standardized. Hence, a concrete [`Experiment`](data_types.md) knows how to parse this into concrete [`TimeTrace`](data_types.md) objects. 
+3. Create an [`ExperimentProcessor`](data_processing.md) by supplying your [`Experiment`](data_types.md)
+4. Register your desired set of manipulations /[ `Transformation`](data_processing.md) instances and run the analysis. 
+5. Store the instructions to redo this analysis into a [`TOML` file](data_io.md).
