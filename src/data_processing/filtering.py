@@ -12,7 +12,6 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.signal import filtfilt, firwin, kaiserord
 
-from src.data_processing.transformation import Transformation
 from src.data_types.type_definitions import TimeTraceType
 
 
