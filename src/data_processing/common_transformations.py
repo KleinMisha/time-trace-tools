@@ -4,11 +4,14 @@ set of commands (Transformations) frequently encountered
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Optional
 
 import numpy as np
 from numpy.typing import NDArray
 
+from src.data_processing.transformation import (
+    BaseTransformation,
+    CoordinateTransformation,
+)
 from src.data_types.type_definitions import TimeTraceType
 
 
@@ -44,42 +47,41 @@ class SelectTracesByLabels:
 
 
 @dataclass
-class SelectFrames:
+class SelectFrames(BaseTransformation):
     """
     Cut out a part of the target trace(s) starting/ending at the given frames (every time point in a time trace is one time frame)
+    Inherit from `BaseTransformation` to get the passthrough logic: non-target traces get passed on to output
     """
 
-    target_traces: list[str]
     start_frame: int
     end_frame: int
 
-    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
-        """creates a new set of TimeTrace objects containing only the data corresponding to the desired frames."""
-        new_traces = []
-        for trace in trace_list:
-            if trace.ID in self.target_traces:
-                section_of_trace = trace.create_time_trace_for_section(
-                    start_index=self.start_frame, end_index=self.end_frame
-                )
-                new_traces.append(section_of_trace)
-            else:
-                # NOTE: If the trace is not a target trace, just pass the original onwards.
-                #!?Assumes you will explicitly call the SelectTraces operation afterwards. Better than have this one implicitly select the traces as well, correct?
-                new_traces.append(trace)
-        return new_traces
+    def apply_to_one_trace(self, trace: TimeTraceType) -> TimeTraceType:
+        """create a new TimeTrace object containing only the data corresponding to the desired frames"""
+        section_of_trace = trace.create_time_trace_for_section(
+            start_index=self.start_frame, end_index=self.end_frame
+        )
+        return section_of_trace
 
 
 @dataclass
-class SelectTimeWindow:
+class SelectTimeWindow(BaseTransformation):
     """
     Cut out a part of the trace starting/ending at the specified time points
     """
 
-    target_traces: list[str]
     start_time: float
     end_time: float
 
-    def generate_target_frames(
+    def apply_to_one_trace(self, trace: TimeTraceType) -> TimeTraceType:
+        """Similar logic as SelectFrames, now first need to get nearest frames to selected time points"""
+        start_frame, end_frame = self._determine_nearest_frames(trace.t)
+        section_of_trace = trace.create_time_trace_for_section(
+            start_index=start_frame, end_index=end_frame
+        )
+        return section_of_trace
+
+    def _determine_nearest_frames(
         self, time_array: NDArray[np.floating]
     ) -> tuple[int, int]:
         """Find nearest frames to specified time points"""
@@ -87,68 +89,23 @@ class SelectTimeWindow:
         end_frame = int(np.abs(time_array - self.end_time).argmin())
         return start_frame, end_frame
 
-    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
-        """
-        Call the SelectFrames Transformation
-        !Assumes the time vectors are identical for all traces in the list.
-        todo: If this is not the case, you must subset each trace differently.
-        """
-        common_time_array = trace_list[0].t
-        start_frame, end_frame = self.generate_target_frames(common_time_array)
-        return SelectFrames(self.target_traces, start_frame, end_frame).apply(
-            trace_list
-        )
-
 
 @dataclass
-class ShiftToOrigin:
+class ShiftToOrigin(CoordinateTransformation):
     """
     shift target traces to the origin (such that they start at value 0 at time 0)
-    !Make sure to unit test that it does not modify the original traces. Should be fine given a deepcopy is passed into this from the ExperimentProcessor
     """
 
-    target_traces: list[str]
-    coordinate: str  # should match one of the available ._value_names of the TimeTrace class (e.g. MagneticTweezersTrace has 'x','y','z')
+    def apply_to_one_trace(self, trace: TimeTraceType) -> TimeTraceType:
+        """return new traces starting from value 0 at time 0"""
+        time_array = trace.t
+        start_time = trace.t[0]
+        time_array -= start_time
+        value_array = trace.__getattribute__(self.coordinate)
+        starting_value = value_array[0]
+        value_array -= starting_value
 
-    def _traces_have_coordinate(
-        self, trace_list: list[TimeTraceType]
-    ) -> tuple[bool, Optional[str]]:
-        """check if the coordinate is valid for the given target traces. If not, it will return the first trace ID at which the check fails"""
-        targets = [trace for trace in trace_list if trace.ID in self.target_traces]
-        for target_trace in targets:
-            if self.coordinate not in target_trace._value_names:
-                return False, target_trace.ID
-
-        return True, None
-
-    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
-        """time-shift the trace along specified coordinate"""
-
-        # quick check you have the coordinate available
-        # ? Possible to remove this code / check and just assume the user is not going to ask to shift a trace along an invalid coordinate
-        valid_coordinate, invalid_trace = self._traces_have_coordinate(trace_list)
-        if not valid_coordinate:
-            raise AttributeError(
-                f"Trace {invalid_trace} does not have a value-array named {self.coordinate}"
-            )
-
-        # the actual operation:
-        new_traces = []
-        for trace in trace_list:
-            if trace.ID in self.target_traces:
-                time_array = trace.t
-                start_time = trace.t[0]
-                time_array -= start_time
-                value_array = trace.__getattribute__(self.coordinate)
-                starting_value = value_array[0]
-                value_array -= starting_value
-
-                shifted_trace = deepcopy(trace)
-                shifted_trace.__setattr__("t", time_array)
-                shifted_trace.__setattr__(self.coordinate, value_array)
-                new_traces.append(shifted_trace)
-
-            else:
-                # keep the other traces unaffected.
-                new_traces.append(trace)
-        return new_traces
+        shifted_trace = deepcopy(trace)
+        shifted_trace.__setattr__("t", time_array)
+        shifted_trace.__setattr__(self.coordinate, value_array)
+        return shifted_trace
