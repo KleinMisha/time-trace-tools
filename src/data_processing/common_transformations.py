@@ -4,6 +4,7 @@ set of commands (Transformations) frequently encountered
 
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 from numpy.typing import NDArray
@@ -11,6 +12,7 @@ from numpy.typing import NDArray
 from src.data_processing.transformation import (
     BaseTransformation,
     CoordinateTransformation,
+    PassThroughTransformation,
 )
 from src.data_types.type_definitions import TimeTraceType
 
@@ -47,7 +49,7 @@ class SelectTracesByLabels:
 
 
 @dataclass
-class SelectFrames(BaseTransformation):
+class SelectFrames(PassThroughTransformation):
     """
     Cut out a part of the target trace(s) starting/ending at the given frames (every time point in a time trace is one time frame)
     Inherit from `BaseTransformation` to get the passthrough logic: non-target traces get passed on to output
@@ -65,7 +67,7 @@ class SelectFrames(BaseTransformation):
 
 
 @dataclass
-class SelectTimeWindow(BaseTransformation):
+class SelectTimeWindow(PassThroughTransformation):
     """
     Cut out a part of the trace starting/ending at the specified time points
     """

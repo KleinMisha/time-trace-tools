@@ -80,6 +80,7 @@ def test_select_frames(experiment: MockExperiment) -> None:
     processor = ExperimentProcessor(experiment)
     processor.add_transformation(
         SelectFrames(
+            coordinate=None,
             target_traces=first_half_of_traces,
             start_frame=first_frame,
             end_frame=midway_the_trace,
@@ -109,6 +110,7 @@ def test_select_time_window(experiment: MockExperiment) -> None:
     processor = ExperimentProcessor(experiment)
     processor.add_transformation(
         SelectTimeWindow(
+            coordinate=None,
             target_traces=first_half_of_traces,
             start_time=quarter_of_the_trace,
             end_time=midway_the_trace,
