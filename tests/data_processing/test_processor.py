@@ -40,8 +40,7 @@ def test_creating_processor(experiment: MockExperiment) -> None:
 
 def test_registering_transformation(experiment: MockExperiment) -> None:
     """register a new transformation (for simplicity, apply it to all traces for now)"""
-    transformation = MockTransformation([trace.ID for trace in experiment.traces])
-    print([trace.ID for trace in experiment.traces])
+    transformation = MockTransformation([])
     processor = ExperimentProcessor(experiment)
     processor.add_transformation(transformation)
     assert processor.transformations == [transformation]
@@ -238,7 +237,7 @@ def test_undo_last_transformation(experiment: MockExperiment) -> None:
         assert trace.__getattribute__("applied")
 
     for trace in modified_traces[50:]:
-        assert not trace.__getattribute__("applied")
+        assert not hasattr(trace, "applied")
 
 
 def test_redo_transformation(experiment: MockExperiment) -> None:
