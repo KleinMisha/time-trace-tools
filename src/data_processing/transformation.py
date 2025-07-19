@@ -46,12 +46,12 @@ class BaseTransformation(ABC):
             return True
         return trace.ID in self.target_traces
 
-    def _validate_coordinate_exists(self, trace: TimeTraceType) -> Optional[bool]:
+    def _validate_coordinate_exists(self, trace: TimeTraceType) -> None:
         """Check that the supplied coordinate is a valid name of a property of the time trace."""
 
         if self.coordinate and self.coordinate not in trace._value_names:
             raise AttributeError(
-                f"trace {trace.ID} does not have values named {self.coordinate}"
+                f"Trace {trace.ID} does not have a value-array named {self.coordinate}"
             )
 
     def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
@@ -69,14 +69,35 @@ class BaseTransformation(ABC):
 
 
 @dataclass
+class PassThroughTransformation(BaseTransformation):
+    """
+    Target traces are supplied + non-target traces get passed into the output unedited.
+    Does not need the logic for coordinate-specific operations
+    """
+
+    coordinate: Optional[str]  # NOTE: redefine here to make type checker happy
+    target_traces: Optional[list[str]]
+
+
+@dataclass
 class CoordinateTransformation(BaseTransformation):
     """A Transformation that acts on a particular coordinate"""
 
     coordinate: str
+    target_traces: Optional[list[str]]  # NOTE: redefine here to make type checker happy
 
 
 @dataclass
 class AllTracesTransformation(BaseTransformation):
     """No defined target traces, simply works on the full list of traces supplied to the .apply() method"""
 
+    coordinate: Optional[str]  # NOTE: redefine here to make type checker happy
+    target_traces: None = None
+
+
+@dataclass
+class HasCoordinateAllTraces(BaseTransformation):
+    """Needs a name of an existing value array, and explicitly operates on all input traces"""
+
+    coordinate: str
     target_traces: None = None
