@@ -1,8 +1,5 @@
 """
-NOTE: Transformation is a Protocol. Not explicitly inherited, so also has nothing to be tested.
-Here just test a basic mock version of the protocol.
-
-!Do note this technically does not ensure future specific Transformation implementations operate properly, these should be tested separately
+Test BaseTransformation
 """
 
 from copy import deepcopy
@@ -51,7 +48,7 @@ def test_apply_transform_not_on_other_traces(
     new_traces = mock_transformation.apply(mock_trace_list)
     for trace in new_traces:
         if trace.ID not in target_traces:
-            assert not trace.__getattribute__("applied")
+            assert not hasattr(trace, "applied")
 
 
 def test_do_not_modify_original_traces(
