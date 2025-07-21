@@ -4,6 +4,7 @@ from typing import Iterable
 
 from src.data_processing.transformation import Transformation
 from src.data_types.experiment import Experiment
+from src.data_types.time_trace import TimeTrace
 
 
 @dataclass
@@ -66,3 +67,6 @@ class ExperimentProcessor:
 
     def get_current_experiment(self) -> Experiment:
         return self._current_experiment
+
+    def get_current_traces(self) -> list[TimeTrace]:
+        return self._current_experiment.traces
