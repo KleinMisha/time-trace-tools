@@ -83,12 +83,11 @@ processor = ExperimentProcessor(experiment)
 
 processor.add_transformations(
     [
-        # Say, we want to continue without the reference bead.
-        SelectTraces(target_traces = [trace.ID for trace in experiment.traces[1:]]),
+        # Say, we want to continue with only the first 10 beads.
+        SelectTraces(target_traces = [trace.ID for trace in experiment.traces[:10]]),
 
-        # Select traces based on a (qualitative) description (to be added by any other tool used earlier)
+        # Now, select further by searching for those traces that are labelled displaying protein activity
         SelectTracesByLabels(
-            target_traces = [trace.ID for trace in experiment.traces], 
             target_labels = ["activity"]
             ),
     ]
@@ -101,7 +100,8 @@ processor.run()
 ```
 
 Modifications are made on a copy of the `original_experiment`, stored as `_current_experiment`. 
-**NOTE: `_current_experiment` is not the ground truth of the application. The set of (to be) applied `Transformation`'s is. Hence, the final state of the experiment is merely kept for cache purposes (hence the underscore it it's name)**
+???+ note "list of transformations is the ground truth" 
+    `_current_experiment` is not the ground truth of the application. The set of (to be) applied `Transformation`'s is. Hence, the final state of the experiment is merely kept for cache purposes (hence the underscore it it's name). 
 
 ```python
 # Need the (final) modified copy of the experiment data? 
@@ -143,11 +143,10 @@ original_data = "path/to/original/data/file"
 
 [[transformations]]
 type = data_processing.common_transformations.SelectTraces 
-target_traces =  ['trace_2', 'trace_2', ..., 'trace_200']
+target_traces =  ['trace_2', 'trace_2', ..., 'trace_10']
 
 [[transformations]]
 type = data_processing.common_transformations.SelectTracesByLabels 
-target_traces =  ['trace_1', 'trace_2', ..., 'trace_200']
 target_labels =  ['activity']
 ```
 
