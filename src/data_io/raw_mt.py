@@ -7,7 +7,7 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 
 import os
 from pathlib import Path
-from typing import IO, Iterable
+from typing import IO, Iterable, Optional
 
 import numpy as np
 import yaml
@@ -19,7 +19,7 @@ from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 FilePath = Path | str
 
 
-def read_mt_data(path: FilePath) -> tuple[NDArray[np.floating], NDArray[np.float64]]:
+def read_mt_data(path: FilePath) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
     """
     loads raw data from magnetic-tweezers (MT)
 
@@ -46,12 +46,15 @@ def read_mt_data(path: FilePath) -> tuple[NDArray[np.floating], NDArray[np.float
 
 
 # pytweezers
-def read_pytweezers(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+def read_pytweezers(
+    path: FilePath, acquisition_rate: Optional[float] = None
+) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
     """
     read raw data produced by pytweezers ('traces.npy')
 
     Args:
-        path (str): absolute path to .npy file
+        path (Path | str): absolute path to .npy file
+        frame_rate (float): Frame rate in Hz.
 
     Returns:
         NDArray[np.float64]: An array with dimensions (num_beads, num_frames, 3). For every bead there is an array of (x,y,z) in the collumns and frames in the rows
@@ -103,12 +106,16 @@ def read_pytweezers(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.flo
         beads_xyz[bead_nr, :, :] = npy_data[:, bead_nr, :]
 
     # -- time in seconds ---
-    # get frame rate from config file
-    dirname = os.path.dirname(path)
-    fn_config = os.path.join(dirname, "config.yaml")
-    with open(fn_config, "r") as f:
-        pytw_config = yaml.safe_load(f)
-    frame_rate = pytw_config["framerate"]
+
+    if not acquisition_rate:
+        # get frame rate from config file
+        dirname = os.path.dirname(path)
+        fn_config = os.path.join(dirname, "config.yaml")
+        with open(fn_config, "r") as f:
+            pytw_config = yaml.safe_load(f)
+        frame_rate = pytw_config["framerate"]
+    else:
+        frame_rate = acquisition_rate
 
     # determine time
     t = (1.0 / frame_rate) * np.arange(num_frames)
@@ -133,4 +140,8 @@ def write_traces(traces: list[MagneticTweezersTrace], path: FilePath) -> None:
         npy_data[:, index, 2] = trace.z
 
     # write to file
-    np.save(path, npy_data)
+    with open(path, "wb") as npy_file:
+        # write 'axis scale' as the header to match format of original file.
+        # NOTE: Given all conversions are already done when you loaded the data, just set the axis_scale=1.0
+        np.save(npy_file, np.array([1.0], dtype=np.float32))
+        np.save(npy_file, npy_data)
