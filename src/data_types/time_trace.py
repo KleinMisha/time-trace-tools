@@ -244,9 +244,8 @@ class TimeTrace(ABC):
         if not new_id:
             new_id = self.ID
 
-        Trace = type(self)
         section_values = tuple(value[start_index:end_index] for value in self._values)
-        return Trace(
+        return self.__class__(
             ID=new_id,
             t=self.t[start_index:end_index],
             labels=[],
