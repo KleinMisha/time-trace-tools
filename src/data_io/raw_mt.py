@@ -7,13 +7,14 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 
 import os
 from pathlib import Path
-from typing import IO
+from typing import IO, Iterable
 
 import numpy as np
 import yaml
 from numpy.typing import NDArray
 
 from src.data_io.labview_legacy import read_labview
+from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 FilePath = Path | str
 
@@ -112,3 +113,24 @@ def read_pytweezers(path: FilePath) -> tuple[NDArray[np.float64], NDArray[np.flo
     # determine time
     t = (1.0 / frame_rate) * np.arange(num_frames)
     return beads_xyz, t
+
+
+# write traces to file
+def write_traces(traces: list[MagneticTweezersTrace], path: FilePath) -> None:
+    """
+    Write a collection of MagneticTweezersTime instances to a file that is in the same format as raw data from pytweezers.
+
+    use a ".npy" file as the output (file)path
+    """
+
+    # create output numpy array (same format produced using pytweezers)
+    num_traces = len(traces)
+    num_frames = len(traces[0])  # NOTE: Assume all traces have the same time axis
+    npy_data = np.zeros((num_frames, num_traces, 3))
+    for index, trace in enumerate(traces):
+        npy_data[:, index, 0] = trace.x
+        npy_data[:, index, 1] = trace.y
+        npy_data[:, index, 2] = trace.z
+
+    # write to file
+    np.save(path, npy_data)
