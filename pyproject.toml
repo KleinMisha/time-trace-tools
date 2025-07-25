@@ -1,7 +1,7 @@
 [project]
-name = "pytweezers-tools"
-version = "0.1.0"
-description = "Add your description here"
+name = "time-trace-tools"
+version = "1.0.0"
+description = "data analysis tools"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

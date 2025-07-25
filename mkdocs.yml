@@ -8,6 +8,7 @@ nav:
     - data_io: data_io.md 
     - data_types: data_types.md 
     - data_processing: data_processing.md  
+  - Versions: version_notes.md 
   - Software design: software_design.md
   - Guidelines for developers: developer_notes.md
 
