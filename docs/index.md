@@ -6,16 +6,10 @@ Handling single-molecule time-trace data made easy.
 
 **description:** *library for handling and (post-)processing data from high-throughput single-molecule experiments (e.g. magnetic tweezers, TIRF/fluorescence microscopy data).*
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
 ## Project layout
     .
-    ├── docs
+    ├── docs/                # markdown files MKdocs website
+    ├── public/              # artifact from `mkdocs build` command. GitLab pages needs this directory name
     ├── htmlcov              # coverage reports from `pytest --cov`
     ├── src             # All Python code is in this 'source' directory 
     │   ├── data_io 
@@ -25,8 +19,8 @@ Handling single-molecule time-trace data made easy.
     │   ├── data_io
     │   ├── data_processing
     │   └── data_types
-    ├── mkdocs.yml.      # settings for MKdocs site 
-    ├── pyproject.toml   # Python project/environment management 
+    ├── mkdocs.yml.     # settings for MKdocs site 
+    ├── pyproject.toml  # Python project/environment management 
     ├── uv.lock         # Python dependencies `uv`
     └── README.md       # README as seen on Gitlab page 
 
