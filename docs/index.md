@@ -22,6 +22,7 @@ Handling single-molecule time-trace data made easy.
     ├── mkdocs.yml.     # settings for MKdocs site 
     ├── pyproject.toml  # Python project/environment management 
     ├── uv.lock         # Python dependencies `uv`
+    ├── .gitlab-ci.yml  # Gitlab actions CI/CD
     └── README.md       # README as seen on Gitlab page 
 
 
