@@ -11,7 +11,7 @@ To include this library as one of the dependencies for your own project ***you d
 
 ```TOML
 [tool.uv.sources]
-pytweezer_tools = { git = 'ssh://git@gitlab.com/DulinlabVU/time-trace-tools.git', tag = <VERSION TAG>}
+time_trace_tools = { git = 'ssh://git@gitlab.com/DulinlabVU/time-trace-tools.git', tag = <VERSION TAG>}
 ```
 
 ???+ tip 
