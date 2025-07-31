@@ -6,7 +6,7 @@ This package is intended to contain tools that make developing subsequent analys
 
 You can view the full project documentation here:
 
-👉 [View the Documentation Website](https://<your-namespace>.gitlab.io/<your-project>/)
+👉 [View the Documentation Website](https://time-trace-tools-3ff349.gitlab.io/)
 
 **This site also contains notes on the software design & guidelines for contributing/developing**
 
