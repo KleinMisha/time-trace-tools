@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 from numpy.typing import NDArray
 
-from src.data_processing.filtering import Filter
-from src.data_processing.processor import ExperimentProcessor
+from time_trace_tools.data_processing.filtering import Filter
+from time_trace_tools.data_processing.processor import ExperimentProcessor
 from tests.data_types.mock_experiment import (
     MockExperiment,
     create_mock_dataset,

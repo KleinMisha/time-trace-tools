@@ -11,8 +11,8 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.signal import filtfilt, firwin, kaiserord
 
-from src.data_processing.transformation import CoordinateTransformation
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_processing.transformation import CoordinateTransformation
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 
 @dataclass

@@ -10,11 +10,11 @@ from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
-from src.data_types.exception_definitions import InvalidTimeTraceError
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 if TYPE_CHECKING:
-    from src.data_types.time_trace import (
+    from time_trace_tools.data_types.time_trace import (
         TimeTrace,
     )  # NOTE: this prevents circular imports (only need to import TimeTrace for the typechecker, not at runtime)
 

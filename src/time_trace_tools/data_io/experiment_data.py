@@ -9,10 +9,9 @@ from pathlib import Path
 from typing import Mapping
 
 import numpy as np
-from numpy.lib.npyio import NpzFile
 from numpy.typing import NDArray
 
-from data_types.time_trace import TimeTrace
+from time_trace_tools.data_types.time_trace import TimeTrace
 
 FilePath = str | Path
 

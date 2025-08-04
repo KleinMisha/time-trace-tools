@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from src.data_processing.transformation import (
+from time_trace_tools.data_processing.transformation import (
     BaseTransformation,
     CoordinateTransformation,
 )
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 
 @dataclass

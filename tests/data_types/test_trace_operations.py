@@ -7,10 +7,10 @@ NOTE: addition, multiplication, subtraction are tested directly in the test_trac
 import numpy as np
 import pytest
 
-from src.data_types.exception_definitions import InvalidTimeTraceError
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
-from src.data_types.trace_operations import add, average_traces
 from tests.data_types.mock_time_trace import MockTimeTrace
+from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
+from time_trace_tools.data_types.trace_operations import add, average_traces
 
 Scalar = int | float | np.integer | np.floating
 

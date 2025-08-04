@@ -5,7 +5,7 @@ test generic workings of TimeTrace class, using MagneticTweezersTrace as an inst
 import numpy as np
 import pytest
 
-from src.data_types.exception_definitions import InvalidTimeTraceError
+from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
 from tests.data_types.mock_time_trace import MockTimeTrace
 
 Scalar = int | float | np.integer | np.floating

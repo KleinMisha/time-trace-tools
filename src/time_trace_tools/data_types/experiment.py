@@ -12,14 +12,14 @@ from typing import Any, Callable, Generic
 
 from numpy.typing import NDArray
 
-from src.data_types.experiment_operations import (
+from time_trace_tools.data_types.experiment_operations import (
     add,
     add_trace_to_experiment,
     subtract,
     subtract_trace_from_experiment,
 )
-from src.data_types.time_trace import TimeTrace
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_types.time_trace import TimeTrace
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 FilePath = Path | str
 DataLoaderFunction = Callable[[FilePath], tuple[NDArray[Any], ...]]

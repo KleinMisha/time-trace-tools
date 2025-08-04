@@ -1,19 +1,19 @@
 import numpy as np
 import pytest
 
-from src.data_processing.common_transformations import (
+from tests.data_types.mock_experiment import (
+    MockExperiment,
+    create_mock_dataset,
+    parse_mock_dataset,
+)
+from time_trace_tools.data_processing.common_transformations import (
     SelectFrames,
     SelectTimeWindow,
     SelectTraces,
     SelectTracesByLabels,
     ShiftToOrigin,
 )
-from src.data_processing.processor import ExperimentProcessor
-from tests.data_types.mock_experiment import (
-    MockExperiment,
-    create_mock_dataset,
-    parse_mock_dataset,
-)
+from time_trace_tools.data_processing.processor import ExperimentProcessor
 
 NUMBER_MOCK_TRACES = 100
 

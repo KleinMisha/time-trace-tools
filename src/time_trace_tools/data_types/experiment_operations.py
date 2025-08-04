@@ -3,12 +3,12 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import TYPE_CHECKING
 
-from src.data_types.exception_definitions import InvalidExperimentError
-from src.data_types.type_definitions import ExperimentType, TimeTraceType
+from time_trace_tools.data_types.exception_definitions import InvalidExperimentError
+from time_trace_tools.data_types.type_definitions import ExperimentType, TimeTraceType
 
 if TYPE_CHECKING:
-    from src.data_types.experiment import Experiment
-    from src.data_types.time_trace import TimeTrace
+    from time_trace_tools.data_types.experiment import Experiment
+    from time_trace_tools.data_types.time_trace import TimeTrace
 
 
 def _validate_all_traces_of_the_same_type(

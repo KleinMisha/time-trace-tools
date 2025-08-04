@@ -2,9 +2,9 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Iterable
 
-from src.data_processing.transformation import Transformation
-from src.data_types.experiment import Experiment
-from src.data_types.time_trace import TimeTrace
+from time_trace_tools.data_processing.transformation import Transformation
+from time_trace_tools.data_types.experiment import Experiment
+from time_trace_tools.data_types.time_trace import TimeTrace
 
 
 @dataclass
@@ -61,7 +61,7 @@ class ExperimentProcessor:
 
         # NOTE: the __class__() method will give type of Experiment this particular implementation is
         id = self.original_experiment.ID
-        self._current_experiment = self.original_experiment.__class__(
+        self._current_experiment: Experiment = self.original_experiment.__class__(
             ID=id, traces=traces
         )
 

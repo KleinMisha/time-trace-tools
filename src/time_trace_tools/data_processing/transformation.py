@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional, Protocol
 
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 
 class Transformation(Protocol):

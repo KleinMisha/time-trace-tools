@@ -12,8 +12,8 @@ from typing import Type
 
 import toml
 
-from src.data_processing.processor import ExperimentProcessor
-from src.data_processing.transformation import Transformation
+from time_trace_tools.data_processing.processor import ExperimentProcessor
+from time_trace_tools.data_processing.transformation import Transformation
 
 FilePath = Path | str
 

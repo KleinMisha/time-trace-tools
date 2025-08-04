@@ -15,8 +15,8 @@ Using this separate file should avoid these issues (according to chatGPT)
 from typing import TYPE_CHECKING, TypeVar
 
 if TYPE_CHECKING:
-    from src.data_types.experiment import Experiment
-    from src.data_types.time_trace import TimeTrace
+    from time_trace_tools.data_types.experiment import Experiment
+    from time_trace_tools.data_types.time_trace import TimeTrace
 
 TimeTraceType = TypeVar("TimeTraceType", bound="TimeTrace")
 ExperimentType = TypeVar("ExperimentType", bound="Experiment")

@@ -9,19 +9,19 @@ from pathlib import Path
 import pytest
 import toml
 
-from src.data_io.processor import (
-    InvalidTransformationError,
-    export_processor_to_toml,
-    read_transformations_from_toml,
-)
-from src.data_processing.processor import ExperimentProcessor
-from src.data_types.type_definitions import TimeTraceType
 from tests.data_processing.mock_transformation import MockTransformation
 from tests.data_types.mock_experiment import (
     MockExperiment,
     create_mock_dataset,
     parse_mock_dataset,
 )
+from time_trace_tools.data_io.processor import (
+    InvalidTransformationError,
+    export_processor_to_toml,
+    read_transformations_from_toml,
+)
+from time_trace_tools.data_processing.processor import ExperimentProcessor
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 
 class BadTransformation:
@@ -128,12 +128,14 @@ def test_read_transformations_from_toml(
     for item in parsed_data:
         assert isinstance(item, MockTransformation)
 
-    assert parsed_data[0].target_traces == [
-        f"trace_{i + 1}" for i in range(number_of_traces // 2)
-    ]
-    assert parsed_data[1].target_traces == [
-        f"trace_{i + 1}" for i in range(number_of_traces // 2, number_of_traces)
-    ]
+    if isinstance(parsed_data[0], MockTransformation):
+        assert parsed_data[0].target_traces == [
+            f"trace_{i + 1}" for i in range(number_of_traces // 2)
+        ]
+    if isinstance(parsed_data[1], MockTransformation):
+        assert parsed_data[1].target_traces == [
+            f"trace_{i + 1}" for i in range(number_of_traces // 2, number_of_traces)
+        ]
 
 
 def test_recreate_analysis_from_toml(

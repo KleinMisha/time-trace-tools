@@ -7,14 +7,14 @@ Should work both with data taken with PyTweezers and LabView (older experiments 
 
 import os
 from pathlib import Path
-from typing import IO, Iterable, Optional
+from typing import IO, Optional
 
 import numpy as np
 import yaml
 from numpy.typing import NDArray
 
-from src.data_io.labview_legacy import read_labview
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
+from time_trace_tools.data_io.labview_legacy import read_labview
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 FilePath = Path | str
 

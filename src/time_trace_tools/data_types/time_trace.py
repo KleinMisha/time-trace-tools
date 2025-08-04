@@ -14,14 +14,14 @@ from typing import Optional
 import numpy as np
 from numpy.typing import NDArray
 
-from src.data_types.exception_definitions import InvalidTimeTraceError
-from src.data_types.trace_operations import (
+from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
+from time_trace_tools.data_types.trace_operations import (
     add,
     add_constant_value,
     multiply_by_value,
     subtract,
 )
-from src.data_types.type_definitions import TimeTraceType
+from time_trace_tools.data_types.type_definitions import TimeTraceType
 
 Scalar = int | float | np.integer | np.floating
 

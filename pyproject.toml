@@ -23,8 +23,20 @@ dev = [
     "pytest-cov>=6.0.0",
 ]
 
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
 [tool.pytest.ini_options]
-pythonpath = "src"
+pythonpath = ["src"]
+testpaths = ["tests"]
 
 [tool.coverage.report]
 exclude_lines = [

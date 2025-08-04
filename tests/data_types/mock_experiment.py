@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 from numpy.typing import NDArray
 
-from src.data_types.experiment import Experiment
+from time_trace_tools.data_types.experiment import Experiment
 from tests.data_types.mock_time_trace import MockTimeTrace
 
 

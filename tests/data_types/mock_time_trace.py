@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import numpy as np
 from numpy.typing import NDArray
 
-from src.data_types.time_trace import TimeTrace
+from time_trace_tools.data_types.time_trace import TimeTrace
 
 
 @dataclass(eq=False)

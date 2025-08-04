@@ -9,7 +9,7 @@ from itertools import product
 import numpy as np
 import pytest
 
-from src.data_processing.filtering import MovingAverageFiler
+from time_trace_tools.data_processing.filtering import MovingAverageFiler
 
 
 @pytest.mark.parametrize(

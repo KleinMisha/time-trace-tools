@@ -3,22 +3,24 @@ from copy import deepcopy
 import numpy as np
 import pytest
 
-from src.data_types.exception_definitions import InvalidExperimentError
-from src.data_types.experiment import Experiment
-from src.data_types.experiment_operations import (
-    add,
-    add_trace_to_experiment,
-    subtract,
-    subtract_trace_from_experiment,
-)
-from src.data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 from tests.data_types.mock_experiment import (
     MockExperiment,
     create_mock_dataset,
     parse_mock_dataset,
 )
 from tests.data_types.mock_time_trace import MockTimeTrace
+from time_trace_tools.data_types.exception_definitions import InvalidExperimentError
+from time_trace_tools.data_types.experiment import Experiment
+from time_trace_tools.data_types.experiment_operations import (
+    add,
+    add_trace_to_experiment,
+    subtract,
+    subtract_trace_from_experiment,
+)
+from time_trace_tools.data_types.magnetic_tweezers_experiment import (
+    MagneticTweezersExperiment,
+)
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 
 @pytest.fixture

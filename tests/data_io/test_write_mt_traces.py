@@ -13,9 +13,11 @@ import numpy as np
 import pytest
 from numpy.typing import NDArray
 
-from src.data_io.raw_mt import read_pytweezers, write_traces
-from src.data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
+from time_trace_tools.data_io.raw_mt import read_pytweezers, write_traces
+from time_trace_tools.data_types.magnetic_tweezers_experiment import (
+    MagneticTweezersExperiment,
+)
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 
 @pytest.fixture

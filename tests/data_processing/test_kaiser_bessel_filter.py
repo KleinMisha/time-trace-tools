@@ -9,8 +9,8 @@ import pytest
 from numpy.typing import NDArray
 from scipy.fft import fft, fftfreq
 
-from src.data_processing.filtering import KaiserBesselFilter
-from src.data_processing.processor import ExperimentProcessor
+from time_trace_tools.data_processing.filtering import KaiserBesselFilter
+from time_trace_tools.data_processing.processor import ExperimentProcessor
 from tests.data_types.mock_experiment import (
     MockExperiment,
     parse_mock_dataset,

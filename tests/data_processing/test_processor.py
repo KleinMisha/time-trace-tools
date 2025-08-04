@@ -4,7 +4,7 @@ test the ExperimentProcessor
 
 import pytest
 
-from src.data_processing.processor import ExperimentProcessor
+from time_trace_tools.data_processing.processor import ExperimentProcessor
 from tests.data_processing.mock_transformation import MockTransformation
 from tests.data_types.mock_experiment import (
     MockExperiment,
