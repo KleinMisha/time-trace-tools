@@ -1,28 +1,36 @@
 # `TimeTraceTools` 
-Handling single-molecule time-trace data made easy. 
-???+ question 
-    Suggestions for a good name are welcome. For now, will stick with `TimeTraceTools`. Will check how to change the name of this repo accordingly. 
+A Python library that makes handling single-molecule time-trace data easy.
 
-
-**description:** *library for handling and (post-)processing data from high-throughput single-molecule experiments (e.g. magnetic tweezers, TIRF/fluorescence microscopy data).*
 
 ## Project layout
+    
     .
-    ├── docs/                # markdown files MKdocs website
-    ├── public/              # artifact from `mkdocs build` command. GitLab pages needs this directory name
-    ├── htmlcov              # coverage reports from `pytest --cov`
-    ├── src             # All Python code is in this 'source' directory 
-    │   ├── data_io 
-    │   ├── data_processing
-    │   └── data_types
-    ├── tests           # The `tests/` directory contains all the unit tests (`pytest`) code and follows the same structure as the corresponding `src/` directory. 
+    ├── README.md           # README.md as displayed on GitLab 
+    ├── pyproject.toml      # Python project/environment management 
+    ├── uv.lock             # Python project/environment management: Created by `uv` 
+    ├── .gitlab-ci.yml      # Gitlab actions CI/CD
+    ├── .vscode           
+    │   ├── extensions.json # Recommended VScode extensions 
+    │   └── settings.json   # Recommended VScode settings 
+    ├── docs                # Content of MKdocs documentation website 
+    │    └── ...            # Markdown (`.md`) files     
+    ├── mkdocs.yml          # settings for MKdocs site 
+    ├── htmlcov             # coverage reports from `pytest --cov`
+    ├── src                 # All Python code is in this 'source' directory 
+    │   ├── time_trace_tools  # Nested structure to unify imports from any directory (always `import time_trace_tools`)
+    │   ├── __init__.py 
     │   ├── data_io
+    │   │   └── ...         # `.py` files in here 
     │   ├── data_processing
+    │   │   └── ...         # `.py` files in here 
     │   └── data_types
-    ├── mkdocs.yml.     # settings for MKdocs site 
-    ├── pyproject.toml  # Python project/environment management 
-    ├── uv.lock         # Python dependencies `uv`
-    ├── .gitlab-ci.yml  # Gitlab actions CI/CD
-    └── README.md       # README as seen on Gitlab page 
-
+    │       └── ...         # `.py` files in here 
+    └── tests                   # Unit tests (`pytest`) code. Follows the same structure as the corresponding `src/` directory. 
+        ├── __init__.py
+        ├── data_io
+        │   └── ...
+        ├── data_processing
+        │   └── ...
+        └── data_types
+            └── ...
 
