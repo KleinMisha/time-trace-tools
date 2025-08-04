@@ -22,6 +22,7 @@ To keep things consistent, adhere to the current structure.
 
 * The root only contains some configuration files (`pyproject.toml`, `mkdocs.yml`, `.gitignore`, etc.), and a  `README.md`. 
 * Code is stored under `src/`
+* To make imports work the same regardless if you are running code from this root directory or from elsewhere (i.e. after you installed this library), code is stored under `src/time_trace_tools`. Now you always import from `time_trace_tools`.
 * Corresponding unit tests are stored under `tests/`. 
 * The structure of the `tests/` directory follows that of the `src/` directory. That is, unit tests for `src/data_types/time_trace.py` are written in `tests/data_types/test_time_trace.py`. 
 

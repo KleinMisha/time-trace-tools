@@ -24,7 +24,7 @@ To define a general purpose handler of any workflow, we define a `Transformation
 
     from typing import Protocol
 
-    from src.data_types.type_definitions import TimeTraceType
+    from time_trace_tools.data_types.type_definitions import TimeTraceType
 
     class Transformation(Protocol):
         """
@@ -439,8 +439,8 @@ Specifically, the `ExperimentProcessor` takes care of:
 === "Code"
 
     ```python linenums="1" title="The Experiment processor"
-    from src.data_processing.transformation import Transformation
-    from src.data_types.experiment import Experiment
+    from time_trace_tools.data_processing.transformation import Transformation
+    from time_trace_tools.data_types.experiment import Experiment
 
     @dataclass
     class ExperimentProcessor:

@@ -10,6 +10,9 @@ Dependencies are manged using `uv` ([uv website for installation instructions](h
 To include this library as one of the dependencies for your own project ***you do not need to clone this repository***. Instead, simply add the following into your `pyproject.toml`. 
 
 ```TOML
+[project]
+dependencies = ["time_trace_tools"]    # add this into the list with the same name as you will use below
+
 [tool.uv.sources]
 time_trace_tools = { git = 'ssh://git@gitlab.com/DulinlabVU/time-trace-tools.git', tag = <VERSION TAG>}
 ```

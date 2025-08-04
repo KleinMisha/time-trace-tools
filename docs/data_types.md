@@ -31,6 +31,7 @@ See the later tabs for the specific implementation valid for traces of magnetic 
     ```
 
 === "Abstraction (Code)" 
+
     ```python linenums="1" hl_lines="13-14 18 26" title="Abstract Base Class for a TimeTrace."
     from abc import ABC, abstractmethod
     from dataclasses import dataclasses 
@@ -80,7 +81,7 @@ See the later tabs for the specific implementation valid for traces of magnetic 
     import numpy as np
     from numpy.typing import NDArray
 
-    from src.data_types.time_trace import TimeTrace
+    from time_trace_tools.data_types.time_trace import TimeTrace
 
 
     @dataclass(eq=False)
@@ -104,7 +105,7 @@ See the later tabs for the specific implementation valid for traces of magnetic 
 Hence, when dealing with data from the magnetic-tweezers instances of `MagneticTweezersTrace` will be created. 
 
 ```python linenums="1" title="Create a time trace" 
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace 
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace 
 
 mt_trace = MagneticTweezersTrace(
     ID = "trace_1",
@@ -240,7 +241,7 @@ Custom implementations of the addition, subtraction, division, and multiplicatio
 Additionally, the comparison operator (`==`) will check for equality on the elements of the value arrays
 ```python linenums="1" hl_lines="21 30 36-39" title="Equality checks"
 
-from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace 
+from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace 
 
 trace_1 = MagneticTweezersTrace(
     ID = "trace_1",
@@ -318,8 +319,8 @@ As the parsing the raw data into the list of `TimeTrace` objects can vary based 
     from numpy.typing import NDArray
     import numpy as np 
 
-    from src.data_types.time_trace import TimeTrace
-    from src.data_types.type_definitions import TimeTraceType
+    from time_trace_tools.data_types.time_trace import TimeTrace
+    from time_trace_tools.data_types.type_definitions import TimeTraceType
 
     FilePath = Path | str
     DataLoaderFunction = Callable[[FilePath], tuple[NDArray[Any], ...]]
@@ -354,8 +355,8 @@ As the parsing the raw data into the list of `TimeTrace` objects can vary based 
 
     ```python linenums="1" hl_lines="9-26" title="specific case of building MagneticTweezerTrace instances from the raw data."    
     
-    from src.data_types.experiment import Experiment
-    from src.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
+    from time_trace_tools.data_types.experiment import Experiment
+    from time_trace_tools.data_types.magnetic_tweezers_trace import MagneticTweezersTrace
 
 
     @dataclass

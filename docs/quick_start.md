@@ -6,8 +6,8 @@ Having acquired your raw data file using our magnetic-tweezers, or MT-TIRF setup
 The `Experiment` object not only stores a list of `TimeTrace` objects, representing the individual time trajectories of the beads / fluorescent spots, it also allows for some more convenient manipulation. See below for more details. 
 
 ```python 
-from data_io.read_mt import read_mt 
-from data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
+from time_trace_tools.data_io.read_mt import read_mt 
+from time_trace_tools.data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment
 
 
 # Instantiate your magnetic tweezers Experiment 
@@ -72,8 +72,8 @@ experiment.set_reference_bead()
 The `ExperimentProcessor` handles applying a series of `Transformations` on your `Experiment`. To setup your analysis, simply instantiate an `ExperimentProcessor` and register the desired set of operations to be performed. 
 
 ```python 
-from data_processing.processor import ExperimentProcessor 
-from data_processing.common_transformations import SelectTracesByLabels, SelectTraces 
+from time_trace_tools.data_processing.processor import ExperimentProcessor 
+from time_trace_tools.data_processing.common_transformations import SelectTracesByLabels, SelectTraces 
 
 # having loaded your experiment data, let's start an analysis 
 processor = ExperimentProcessor(experiment)
@@ -131,7 +131,7 @@ processor.run()
 Instead of storing all intermediate transformed versions of traces (as we did in the past), we simply store the raw data and a set of instructions from which you can recreate the processed data. 
 
 ```python 
-from data_io.processor import export_processor_to_toml
+from time_trace_tools.data_io.processor import export_processor_to_toml
 export_processor_to_toml(path=Path("processing_instructions.toml"), processor=processor)
 ```
 
@@ -156,10 +156,10 @@ The TOML file will be parsed to produce a list of `Transformation` instances tha
 
 Combining the above, to load / instantiate the modified data: 
 ```python
-from data_io.raw_mt import read_mt_data
-from data_io.processor import read_transformations_from_toml
-from data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment 
-from data_processing.processor import ExperimentProcessor 
+from time_trace_tools.data_io.raw_mt import read_mt_data
+from time_trace_tools.data_io.processor import read_transformations_from_toml
+from time_trace_tools.data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment 
+from time_trace_tools.data_processing.processor import ExperimentProcessor 
 
 
 # Load the raw data and instantiate the trace list 

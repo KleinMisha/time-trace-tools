@@ -6,7 +6,7 @@ The `data_io.raw_mt` module contains all functions required to load data from th
 
 ```python linenums="1" title="Read raw data"
 
-from data_io.raw_mt import read_mt 
+from time_trace_tools.data_io.raw_mt import read_mt 
 T, (X,Y,Z) = read_mt()
 
 ```
@@ -21,8 +21,8 @@ T, (X,Y,Z) = read_mt()
 
 ```python linenums="1" title="Create an Experiment object"
 
-from data_io.raw_mt import read_mt 
-from data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment 
+from time_trace_tools.data_io.raw_mt import read_mt 
+from time_trace_tools.data_types.magnetic_tweezers_experiment import MagneticTweezersExperiment 
 
 experiment = MagneticTweezersExperiment()
 experiment.create_traces(data_loader_fn = read_mt)
@@ -36,7 +36,7 @@ Once done with processing your time traces (using the `ExperimentProcessor`) you
 === "Code"
 
     ```python linenums="1" title="Save transformations to file"
-    from data_io.processor import export_processor_to_toml
+    from time_trace_tools.data_io.processor import export_processor_to_toml
     export_processor_to_toml(path=Path("processing_instructions.toml"), processor=processor)
     ```
 === "Output"
@@ -78,7 +78,7 @@ processor.run()
 Want to save time trace data directly? 
 
 ```python linenums="1" title="Save experiment to file (magnetic tweezers)"
-from data_io.raw_mt import write_traces
+from time_trace_tools.data_io.raw_mt import write_traces
 
 # save time traces to file 
 mt_traces = mt_experiment.traces
