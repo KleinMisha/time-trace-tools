@@ -118,9 +118,9 @@ class Experiment(ABC, Generic[TimeTraceType]):
         for trace in self.traces:
             trace.add_labelled_sections_from_dictionary(section_labels)
 
-    def add_batch_labels_from_dictionary(self, labels: dict[str, list[str]]) -> None:
+    def set_labels(self, labels: dict[str, list[str]]) -> None:
         """
-        Add a batch of labels to selected member traces
+        Set labels for multiple traces within your experiment
 
         labels [dict[str, list[str]]]: Dictionary mapping trace IDs to lists of labels to be added to it.
         """
@@ -128,3 +128,21 @@ class Experiment(ABC, Generic[TimeTraceType]):
         for trace_id, label_list in labels.items():
             trace = self.fetch_trace(trace_id)
             trace.add_labels(labels=label_list)
+
+    def set_section_labels(
+        self, section_labels: dict[str, dict[tuple[int, int], list[str]]]
+    ) -> None:
+        """
+        Set section labels for traces within your experiment
+
+        section_labels [dict[str, dict[tuple[int, int], list[str]]]]: Dictionary mapping trace IDs to the dictionary of section labels to be added to it
+        """
+        for trace_id, section_labels_dict in section_labels.items():
+            trace = self.fetch_trace(trace_id)
+            trace.add_labelled_sections_from_dictionary(section_labels_dict)
+
+    def get_labels(self) -> dict[str, list[str]]:
+        return {trace.ID: trace.labels for trace in self.traces}
+
+    def get_section_labels(self) -> dict[str, dict[tuple[int, int], list[str]]]:
+        return {trace.ID: trace.section_labels for trace in self.traces}
