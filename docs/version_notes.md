@@ -1,3 +1,8 @@
+
+# [1.0.1] - 2025-07-28
+Had to adjust a minor issue regarding imports. No new features 
+
+
 # [1.0.0] - 2025-07-25
 First version with all essential stuff working (woohoooo!). All features can be seen as documentation on this website. For future versions, this page can be used to specify the updates done. 
 
