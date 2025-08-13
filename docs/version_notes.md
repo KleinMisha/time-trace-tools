@@ -1,3 +1,64 @@
+# [1.1.0] - 2025-08-13
+Added simple `Experiment` level entry points to set/get the labels (or section labels) for all traces in the experiment.
+
+**NOTE: renamed function `data_types.experiment.Experiment.add_batch_labels_from_dictionary()` to `data_types.experiment.Experiment.set_labels()`**
+
+
+=== "Labels"
+
+    ```python linenums="1" title="use dictionary mapping trace id's to list of labels" 
+
+        # setting from dictionary 
+        new_labels = {
+                "trace_1": ["first_label", "second_label"],
+                "trace_50": ["second_label", "third_label"],
+                "trace_13": ["first_label", "fourth_label"],
+            }
+        experiment.set_labels(labels=new_labels)
+
+    
+        # getting a dictionary 
+        all_labels = experiment.get_labels()
+    ```
+
+
+=== "Section Labels"
+
+    ```python linenums="1" title="use dictionary mapping trace id's to dictionary of section labels" 
+
+        # setting from dictionary 
+        new_section_labels = {
+        "trace_23": {
+            (0, 10): ["start", "first_label"],
+            (23, 42): ["first_label", "second_label"],
+        },
+        "trace_45": {
+            (32, 60): ["start", "first_label"],
+            (75, 80): ["second_label"],
+        },
+    }
+        experiment.set_section_labels(new_section_labels)
+    
+        # getting a dictionary 
+        all_section_labels = experiment.get_section_labels()
+    ```
+
+Added reader/writers in `data_io.labels.py`:
+
+```python linenums="1" title="Simple JSON reading/writing"
+    from time_trace_tools.data_io.labels import write_experiment_labels, write_experiment_section_labels, read_json
+
+    # write by entering the experiment (for convenience. Can also just call the .get_...() method and write to JSON)
+    write_experiment_labels(experiment, "labelled_traces.json")
+    write_experiment_section_labels(experiment, "labelled_trace_sections.json")
+
+    # read the JSON file: Can be used to instantiate an Experiment with correctly labelled traces 
+    my_labels = read_json("labelled_traces.json")
+    my_section_labels = read_json("labelled_trace_sections.json")
+```
+
+Included `SetLabels(labels:dict[str, list[str]])` and `SetSectionLabels(section_labels:dict[str, dict[tuple[int,int], list[str]]])` to `data_processing.common_transformations` to enable equivalent operations to be part of a data processing pipeline. 
+
 
 # [1.0.1] - 2025-07-28
 Had to adjust a minor issue regarding imports. No new features 
