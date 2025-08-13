@@ -160,7 +160,7 @@ def test_add_batch_labels_from_dictionary(experiment: MockExperiment) -> None:
         "trace_50": ["second_label", "third_label"],
         "trace_13": ["first_label", "fourth_label"],
     }
-    experiment.add_batch_labels_from_dictionary(labels=my_labels)
+    experiment.set_labels(labels=my_labels)
 
     trace_1 = experiment.fetch_trace(trace_id="trace_1")
     trace_50 = experiment.fetch_trace(trace_id="trace_50")
@@ -175,6 +175,79 @@ def test_add_batch_labels_from_dictionary(experiment: MockExperiment) -> None:
     assert experiment.fetch_traces_by_label(label="second_label") == has_second_label
     assert experiment.fetch_traces_by_label(label="third_label") == has_third_label
     assert experiment.fetch_traces_by_label(label="fourth_label") == has_fourth_label
+
+
+def test_get_labels(experiment: MockExperiment) -> None:
+    """should be trivial, just here to ensure function does not get removed unintentionally / increase coverage"""
+    my_labels = {
+        "trace_1": ["first_label", "second_label"],
+        "trace_50": ["second_label", "third_label"],
+        "trace_13": ["first_label", "fourth_label"],
+    }
+    experiment.set_labels(labels=my_labels)
+
+    assert experiment.get_labels() == {
+        trace.ID: my_labels[trace.ID] if trace.ID in my_labels.keys() else []
+        for trace in experiment.traces
+    }
+
+
+def test_get_labels_empty(experiment: MockExperiment) -> None:
+    assert experiment.get_labels() == {trace.ID: [] for trace in experiment.traces}
+
+
+def test_add_batch_section_labels(experiment: MockExperiment) -> None:
+    """Using the experiment to set labels on individual traces"""
+    my_section_labels = {
+        "trace_23": {
+            (0, 10): ["start", "first_label"],
+            (23, 42): ["first_label", "second_label"],
+        },
+        "trace_45": {
+            (32, 60): ["start", "first_label"],
+            (75, 80): ["second_label"],
+        },
+    }
+    experiment.set_section_labels(my_section_labels)
+    trace_23 = experiment.fetch_trace("trace_23")
+    trace_45 = experiment.fetch_trace("trace_45")
+    assert trace_23._fetch_indices_section_by_label(label="start") == [(0, 10)]
+    assert trace_23._fetch_indices_section_by_label(label="first_label") == [
+        (0, 10),
+        (23, 42),
+    ]
+    assert trace_23._fetch_indices_section_by_label(label="second_label") == [(23, 42)]
+
+    assert trace_45._fetch_indices_section_by_label(label="start") == [(32, 60)]
+    assert trace_45._fetch_indices_section_by_label(label="first_label") == [(32, 60)]
+    assert trace_45._fetch_indices_section_by_label(label="second_label") == [(75, 80)]
+
+
+def test_get_section_labels(experiment: MockExperiment) -> None:
+    """should be trivial, just here to ensure function does not get removed unintentionally / increase coverage"""
+    my_section_labels = {
+        "trace_23": {
+            (0, 10): ["start", "first_label"],
+            (23, 42): ["first_label", "second_label"],
+        },
+        "trace_45": {
+            (32, 60): ["start", "first_label"],
+            (75, 80): ["second_label"],
+        },
+    }
+    experiment.set_section_labels(my_section_labels)
+    assert experiment.get_section_labels() == {
+        trace.ID: my_section_labels[trace.ID]
+        if trace.ID in my_section_labels.keys()
+        else {}
+        for trace in experiment.traces
+    }
+
+
+def test_get_section_labels_empty(experiment: MockExperiment) -> None:
+    assert experiment.get_section_labels() == {
+        trace.ID: {} for trace in experiment.traces
+    }
 
 
 def test_fetch_non_existing_trace(experiment: MockExperiment) -> None:
