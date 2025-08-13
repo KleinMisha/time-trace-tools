@@ -29,7 +29,6 @@ class SelectTraces:
 class SelectTracesByLabels:
     """only keep the traces with a specific (set of) label(s)"""
 
-    target_traces: list[str]
     target_labels: list[str]
 
     def generate_trace_ids(self, trace_list: list[TimeTraceType]) -> list[str]:
@@ -37,8 +36,7 @@ class SelectTracesByLabels:
         return [
             trace.ID
             for trace in trace_list
-            if trace.ID in self.target_traces
-            and set(trace.labels) == set(self.target_labels)
+            if set(trace.labels) == set(self.target_labels)
         ]
 
     def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
@@ -109,3 +107,31 @@ class ShiftToOrigin(CoordinateTransformation):
         shifted_trace.__setattr__("t", time_array)
         shifted_trace.__setattr__(self.coordinate, value_array)
         return shifted_trace
+
+
+@dataclass
+class SetLabels:
+    """set trace level labels from a dictionary mapping trace identifier (str) to its corresponding labels (list[str])"""
+
+    labels: dict[str, list[str]]
+
+    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
+        for trace in trace_list:
+            if trace.ID in self.labels.keys():
+                trace.add_labels(self.labels[trace.ID])
+        return trace_list
+
+
+@dataclass
+class SetSectionLabels:
+    """set trace level section labels from a dictionary mapping trace identifier (str) to its corresponding section labels (dict[(int, int), list[str]])"""
+
+    section_labels: dict[str, dict[tuple[int, int], list[str]]]
+
+    def apply(self, trace_list: list[TimeTraceType]) -> list[TimeTraceType]:
+        for trace in trace_list:
+            if trace.ID in self.section_labels.keys():
+                trace.add_labelled_sections_from_dictionary(
+                    self.section_labels[trace.ID]
+                )
+        return trace_list

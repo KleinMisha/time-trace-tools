@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import numpy as np
 import pytest
 
@@ -11,6 +13,8 @@ from time_trace_tools.data_processing.common_transformations import (
     SelectTimeWindow,
     SelectTraces,
     SelectTracesByLabels,
+    SetLabels,
+    SetSectionLabels,
     ShiftToOrigin,
 )
 from time_trace_tools.data_processing.processor import ExperimentProcessor
@@ -59,7 +63,6 @@ def test_select_traces_by_labels(experiment: MockExperiment) -> None:
     processor = ExperimentProcessor(experiment)
     processor.add_transformation(
         SelectTracesByLabels(
-            target_traces=[trace.ID for trace in experiment.traces],
             target_labels=["first_label", "second_label"],
         )
     )
@@ -201,3 +204,51 @@ def test_shift_does_not_affect_original_trace(experiment: MockExperiment) -> Non
     # NOTE: I could've explicitly tested for the value I know it should be, but does not matter
     for trace in processor.original_experiment.traces:
         assert (trace.t[0] != 0.0) and (trace.value_one[0] != 0.0)
+
+
+def test_set_labels(experiment: MockExperiment) -> None:
+    """
+    Use that experiment.get_labels() has its own unit test
+    NOTE: Here I properly tested it outside the context of the ExperimentProcessor. Not the goal of this test
+    """
+    new_labels = {
+        "trace_1": ["first_label", "second_label"],
+        "trace_50": ["second_label", "third_label"],
+        "trace_13": ["first_label", "fourth_label"],
+    }
+
+    transformation = SetLabels(labels=new_labels)
+    traces_after = transformation.apply(deepcopy(experiment.traces))
+    experiment_after_transform = MockExperiment(
+        ID="labels are set", traces=traces_after
+    )
+    through_transformation = experiment_after_transform.get_labels()
+
+    experiment.set_labels(new_labels)
+    through_instance_method = experiment.get_labels()
+    assert through_transformation == through_instance_method
+
+
+def test_set_section_labels(experiment: MockExperiment) -> None:
+    """Equivalent to `test_set_labels()` for the `SetSectionLabels()` transformation"""
+    new_section_labels = {
+        "trace_23": {
+            (0, 10): ["start", "first_label"],
+            (23, 42): ["first_label", "second_label"],
+        },
+        "trace_45": {
+            (32, 60): ["start", "first_label"],
+            (75, 80): ["second_label"],
+        },
+    }
+
+    transformation = SetSectionLabels(section_labels=new_section_labels)
+    traces_after = transformation.apply(deepcopy(experiment.traces))
+    experiment_after_transform = MockExperiment(
+        ID="section labels are set", traces=traces_after
+    )
+    through_transformation = experiment_after_transform.get_section_labels()
+
+    experiment.set_section_labels(new_section_labels)
+    through_instance_method = experiment.get_section_labels()
+    assert through_transformation == through_instance_method
