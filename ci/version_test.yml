@@ -8,9 +8,6 @@ bump_version_and_tag_test:
     - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
   script:
     - bash ci/release_test.sh
-  needs:
-    - pytest
-    - build_docs_site
   only:
     - ci-test
 

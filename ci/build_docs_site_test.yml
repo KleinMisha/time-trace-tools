@@ -8,7 +8,5 @@ build_docs_dry:
   artifacts:
     paths:
       - public
-  needs:
-    - pytest_dry
   only:
     - ci-test
