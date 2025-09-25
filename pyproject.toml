@@ -43,3 +43,6 @@ exclude_lines = [
     "if TYPE_CHECKING:" , #ignores the 'if TYPE_CHECKING' blocks in the coverage report,
     "@abstractmethod"
 ]
+
+[tool.coverage.run]
+omit = ["tests/*"]

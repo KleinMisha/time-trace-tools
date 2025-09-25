@@ -281,3 +281,17 @@ class TimeTrace(ABC):
             )
             trace_sections.append(trace_subset)
         return trace_sections
+
+    def determine_section_boundaries(self) -> list[int]:
+        """Parse the section labels into a list of boundaries"""
+        boundary_frames: list[int] = []
+        for start_frame, end_frame in self.section_labels.keys():
+            if start_frame is not None:
+                boundary_frames.append(start_frame)
+            if end_frame is not None:
+                boundary_frames.append(end_frame)
+        return boundary_frames
+
+    def get_labels(self) -> list[str]:
+        """Expose labels to other programs (which do not need to know implementation details)"""
+        return list(self.labels)
