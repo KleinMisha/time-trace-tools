@@ -7,14 +7,7 @@ bump_version_and_tag_test:
     - git config --global user.email "gitlab-ci-test@email.com"
     - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
   script:
-    - echo 'Current branch: $(git branch --show-current)'
-    - bash -c 'VERSION=$(uv version --short); echo "Current version: $VERSION"'
-    - echo "Dry-run: uv version --bump ${VERSION_TYPE:-patch}"
-    - uv version --dry-run --bump ${VERSION_TYPE:-patch}
-    - bash -c 'NEW_VERSION=$(uv version --short); echo "Would commit version bump for $NEW_VERSION"'
-    - echo "Would push commit to main: git push origin main"
-    - echo "Would create tag: git tag v$NEW_VERSION"
-    - echo "Would push tag: git push origin v$NEW_VERSION"
+    - bash ci/release_test.sh
   needs:
     - pytest
     - build_docs_site
