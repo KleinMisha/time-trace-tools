@@ -1,0 +1,14 @@
+build_docs_dry:
+  stage: build_docs
+  image: python:3.12
+  script:
+    - echo "Dry-run: Installing MkDocs dependencies"
+    - echo "Dry-run: Would build documentation site"
+    - echo "Dry-run: Site would be moved to public/"
+  artifacts:
+    paths:
+      - public
+  needs:
+    - pytest_dry
+  only:
+    - ci-test
