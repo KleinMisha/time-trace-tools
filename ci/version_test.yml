@@ -2,23 +2,17 @@ bump_version_and_tag_test:
   stage: version
   image: python:3.12
   before_script:
-    # Install git and set up CI user
-    - apk add --no-cache git
+    - apk add --no-cache git # Install git and set up CI user
     - git config --global user.name "GitLab CI/CD Test"
     - git config --global user.email "gitlab-ci-test@email.com"
-    # Authenticate using deploy token (won't actually push in test)
-    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git  # Authenticate using deploy token (won't actually push in test)
   script:
-    # Show current branch
-    - echo "Current branch: $(git branch --show-current)"
-    # Show current version
+    - echo "Current branch: $(git branch --show-current)"   # Show current branch
     - VERSION=$(uv version --short)
-    - echo "Current version: $VERSION"
-    # Dry-run bump
-    - echo "Dry-run: uv version --bump ${VERSION_TYPE:-patch}"
+    - echo "Current version: $VERSION"    # Show current version
+    - echo "Dry-run: uv version --bump ${VERSION_TYPE:-patch}"  # Dry-run bump
     - uv version --dry-run --bump ${VERSION_TYPE:-patch}
-    # Show what would be pushed
-    - NEW_VERSION=$(uv version --short)
+    - NEW_VERSION=$(uv version --short) # Show what would be pushed
     - echo "Would commit version bump for $NEW_VERSION"
     - echo "Would push commit to main: git push origin main"
     - echo "Would create tag: git tag v$NEW_VERSION"
