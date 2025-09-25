@@ -1,0 +1,27 @@
+bump_version_and_tag:
+  stage: version
+  image: python:3.12-alpine
+  before_script:
+    - apk add --no-cache git
+    - git config --global user.name "GitLab CI/CD"
+    - git config --global user.email "gitlab-ci@email.com"
+    # Authenticate using deploy token
+    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+  script:
+    # Get current version from uv and bump (example: minor bump via CI variable)
+    - uv version --bump ${VERSION_TYPE:-patch}
+    - VERSION=$(uv version --short)
+    # Push changes and tag
+    - git push origin main
+    - git tag "v$VERSION"
+    - git push origin "v$VERSION"
+  needs:
+    - pytest
+    - build_docs
+  only:
+    - main
+
+
+
+
+

@@ -1,0 +1,17 @@
+build_docs_site:
+  image: python:3.12
+  stage: build_docs
+  script:
+    - pip install mkdocs mkdocs-material
+    - mkdocs build 
+    - mv site public 
+  artifacts:
+    paths:
+      - public
+  needs: 
+    - pytest 
+  only:
+    - main 
+
+  
+

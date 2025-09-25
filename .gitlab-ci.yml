@@ -1,13 +1,9 @@
-image: python:3.11
+stages:
+  - test
+  - build_docs
+  - version
 
-pages:
-  stage: deploy
-  script:
-    - pip install mkdocs mkdocs-material
-    - mkdocs build 
-    - mv site public 
-  artifacts:
-    paths:
-      - public
-  only:
-    - main 
+include:
+  - local: ci/test.yml
+  - local: ci/build_docs_site.yml
+  - local: ci/version.yml

@@ -1,0 +1,18 @@
+pytest:
+  image: python:3.12
+  stage: test
+  script:
+    # install UV and sync dependencies
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$PATH"
+    - uv sync
+    # run pytest with coverage and generate JUnit XML
+    - uv run pytest --cov -v --junitxml=test-results.xml
+  artifacts:
+    paths:
+      - htmlcov/
+    reports:
+      junit: test-results.xml
+  only:
+    - main
+

@@ -1,0 +1,20 @@
+bump_version:
+  stage: version
+  image: python:3.11
+  variables:
+    GIT_STRATEGY: clone
+  before_script:
+    - curl -LsSf https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$PATH"
+    - uv sync
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "ci@example.com"
+  script:
+    - echo "🔢 Bumping version: $VERSION_BUMP"
+    - uv version --bump $VERSION_BUMP
+    - git add pyproject.toml
+    - git commit -m "chore: bump version ($VERSION_BUMP) [skip ci]"
+  needs:
+    - documentation_site
+  only:
+    - main
