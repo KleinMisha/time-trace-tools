@@ -2,17 +2,17 @@ bump_version_and_tag_test:
   stage: version
   image: python:3.12
   before_script:
-    - apk add --no-cache git # Install git and set up CI user
+    - apk add --no-cache git 
     - git config --global user.name "GitLab CI/CD Test"
     - git config --global user.email "gitlab-ci-test@email.com"
-    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git  # Authenticate using deploy token (won't actually push in test)
+    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git  
   script:
-    - echo "Current branch: $(git branch --show-current)"   # Show current branch
+    - echo "Current branch: $(git branch --show-current)"   
     - VERSION=$(uv version --short)
-    - echo "Current version: $VERSION"    # Show current version
-    - echo "Dry-run: uv version --bump ${VERSION_TYPE:-patch}"  # Dry-run bump
+    - echo "Current version: $VERSION"    
+    - echo "Dry-run: uv version --bump ${VERSION_TYPE:-patch}"  
     - uv version --dry-run --bump ${VERSION_TYPE:-patch}
-    - NEW_VERSION=$(uv version --short) # Show what would be pushed
+    - NEW_VERSION=$(uv version --short) 
     - echo "Would commit version bump for $NEW_VERSION"
     - echo "Would push commit to main: git push origin main"
     - echo "Would create tag: git tag v$NEW_VERSION"
@@ -21,4 +21,4 @@ bump_version_and_tag_test:
     - pytest
     - build_docs_site
   only:
-    - ci-test  # Replace with your test branch name
+    - ci-test  
