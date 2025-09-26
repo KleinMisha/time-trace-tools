@@ -9,5 +9,5 @@ bump_version_and_tag_test:
   script:
     - bash ci/release_test.sh
   only:
-    - ci-test
+    - ci_test
 

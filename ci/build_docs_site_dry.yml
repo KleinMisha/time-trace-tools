@@ -4,4 +4,4 @@ build_docs_site_dry:
   script:
     - echo "hello world"
   only:
-    - ci-test
+    - ci_test

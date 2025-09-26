@@ -13,4 +13,4 @@ pytest_dry:
     reports:
       junit: test-results.xml
   only:
-    - ci-test
+    - ci_test
