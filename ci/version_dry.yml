@@ -1,6 +1,6 @@
 bump_version_and_tag_test:
   stage: version
-  image: python:3.12
+  image: python:3.12-alpine
   before_script:
     - apk add --no-cache git
     - git config --global user.name "GitLab CI/CD Test"
