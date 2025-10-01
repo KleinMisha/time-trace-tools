@@ -3,7 +3,7 @@ pytest_test:
   stage: test
   script:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
-    - source $HOME/.cargo/env
+    - export PATH="$HOME/.local/bin:$PATH"
     - uv sync
     - uv run pytest --cov -v --junitxml=test-results.xml
   only:
