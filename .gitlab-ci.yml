@@ -1,6 +1,6 @@
 stages:
   - test
-  - build_docs
+  - build_docs_site
   - version
 
 include:
