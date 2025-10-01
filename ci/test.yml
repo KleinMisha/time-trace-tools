@@ -5,7 +5,7 @@ pytest_test:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.local/bin:$PATH"
     - uv sync
-    - uv run pytest --cov -v --junitxml=test-results.xml
+    - uv run pytest --cov --cov-report=html -v --junitxml=test-results.xml
   artifacts:
     when: always
     reports:
@@ -14,7 +14,7 @@ pytest_test:
       - test-results.xml
       - htmlcov/            
     expire_in: 1 week
-  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  coverage: '/TOTAL.*?(\d+\.\d+%|\d+%)/'
   only:
     - ci_test
 
