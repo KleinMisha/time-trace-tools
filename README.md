@@ -1,5 +1,5 @@
-![pipeline status](https://gitlab.com/<namespace>/<project>/badges/main/pipeline.svg)
-![coverage report](https://gitlab.com/<namespace>/<project>/badges/main/coverage.svg)
+![pipeline status](https://gitlab.com/DulinlabVU/time-trace-tools/badges/main/pipeline.svg)
+![coverage report](https://gitlab.com/DulinlabVU/time-trace-tools/badges/main/coverage.svg)
 
 
 # Time Trace Tools 
