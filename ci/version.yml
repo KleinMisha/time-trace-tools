@@ -12,6 +12,8 @@ bump_version_and_tag:
     - uv version --bump ${VERSION_TYPE:-patch} 
     - VERSION=$(uv version --short)
     - git commit -am "Bump version to $VERSION [ci skip]"
+    - git remote -v 
+    - git ls-remote origin 
     - git push origin HEAD:main
     - git tag "v$VERSION"
     - git push origin "v$VERSION"
