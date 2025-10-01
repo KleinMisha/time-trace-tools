@@ -11,8 +11,12 @@ This package is intended to contain tools that make developing subsequent analys
 You can view the full project documentation here:
 
 👉 [View the Documentation Website](https://time-trace-tools-3ff349.gitlab.io/)
-
 **This site also contains notes on the software design & guidelines for contributing/developing**
+
+
+👉 [View detailed test coverage report](https://dulinlabvu.gitlab.io/time-trace-tools/coverage/index.html)
+(***coverage reports will persist for 1 week after the commit***)
+
 
 
 

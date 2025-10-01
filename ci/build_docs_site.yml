@@ -5,13 +5,16 @@ pages:
     - pip install mkdocs mkdocs-material
     - mkdocs build 
     - mv site public 
+    - mkdir -p public/coverage/
+    - cp -r htmlcov/* public/coverage/
   artifacts:
     paths:
       - public
   needs: 
     - pytest 
   only:
-    - main 
+    - ci_test 
 
   
+
 
