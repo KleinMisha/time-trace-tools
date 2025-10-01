@@ -5,7 +5,9 @@ bump_version_and_tag:
     - apk add --no-cache git
     - git config --global user.name "GitLab CI/CD"
     - git config --global user.email "gitlab-ci@email.com"
-    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git 
+    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+    - wget -qO- https://astral.sh/uv/install.sh | sh
+    - export PATH="$HOME/.local/bin:$PATH" 
   script:
     - uv version --bump ${VERSION_TYPE:-patch} 
     - VERSION=$(uv version --short)
@@ -17,8 +19,8 @@ bump_version_and_tag:
     - pytest
     - build_docs_site
   only:
-    - main
-
+    - ci_test
+  when: manual
 
 
 

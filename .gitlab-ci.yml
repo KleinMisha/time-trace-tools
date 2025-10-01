@@ -6,4 +6,4 @@ stages:
 include:
   - local: ci/test.yml
   - local: ci/build_docs_site.yml
-  - local: ci/version_dry.yml
+  - local: ci/version.yml
