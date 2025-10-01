@@ -1,3 +1,20 @@
+# [1.1.1] - 2025-10-01
+* Added methods to expose getting the labels and section labels from a `TimeTrace`. Needed for development of GUI.
+* Gitlab CI/CD jobs will run when pushing to the main branch 
+  * run pytest 
+  * build the documentation website (and deployment on Gitlab pages)
+  * a job to bump the version (**manual trigger**)
+  
+  To trigger the version bump:
+  * open the pipeline (click on the checkmark icon next to the latest commit)
+  * alternatively: go to "**Build -> Jobs**"
+  * the final job will be shown with a grayed out timer icon.
+  * click on it, and you will be prompted to provide some arguments
+    * key: VERSION_TYPE 
+    * value: major | minor | patch (**pick the one that is appropriate**)
+  * the job will run and automatically bump the version in the `pyproject.toml` and will create a new version tag with git and push it to this repository.
+   
+
 # [1.1.0] - 2025-08-13
 Added simple `Experiment` level entry points to set/get the labels (or section labels) for all traces in the experiment.
 
