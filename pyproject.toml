@@ -5,7 +5,6 @@ description = "data analysis tools"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "jupyterlab>=4.3.5",
     "matplotlib>=3.10.0",
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.6.14",
