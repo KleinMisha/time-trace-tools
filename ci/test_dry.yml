@@ -1,16 +1,10 @@
-pytest_dry:
-  stage: test
+pytest_test:
   image: python:3.12
+  stage: test
   script:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
-    - export PATH="$HOME/.local/bin:$PATH"
+    - source $HOME/.cargo/env
     - uv sync
-    - echo "Running pytest dry-run"
-    - uv run pytest --cov -v --maxfail=1 --disable-warnings
-  artifacts:
-    paths:
-      - htmlcov/
-    reports:
-      junit: test-results.xml
+    - uv run pytest --cov -v --junitxml=test-results.xml
   only:
     - ci_test

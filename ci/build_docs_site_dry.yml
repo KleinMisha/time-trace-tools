@@ -1,7 +1,10 @@
-build_docs_site_dry:
-  stage: build_docs
+build_docs_test:
   image: python:3.12
+  stage: build_docs
   script:
-    - echo "hello world"
+    - pip install mkdocs mkdocs-material
+    - mkdocs build 
+    - mv site public
+    - echo "DRY RUN: Site built, will NOT be deployed"
   only:
     - ci_test

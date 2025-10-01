@@ -1,16 +1,11 @@
-bump_version_and_tag_test:
+bump_version_dry:
   stage: version
   image: python:3.12-alpine
-  before_script:
-    - apk add --no-cache git bash curl 
-    - git config --global user.name "GitLab CI/CD Test"
-    - git config --global user.email "gitlab-ci-test@email.com"
-    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
   script:
-    - curl -LsSf https://astral.sh/uv/install.sh | sh
-    - export PATH="$HOME/.local/bin:$PATH"
-    - uv sync 
-    - bash ci/release_test.sh
+    - apk add --no-cache git
+    - wget -qO- https://astral.sh/uv/install.sh | sh
+    - source $HOME/.cargo/env
+    - uv version --bump ${VERSION_TYPE:-patch} --dry-run
   only:
     - ci_test
-
+  when: manual

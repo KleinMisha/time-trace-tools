@@ -1,4 +1,4 @@
-build_docs_site:
+pages:
   image: python:3.12
   stage: build_docs
   script:
