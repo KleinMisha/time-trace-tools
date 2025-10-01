@@ -17,7 +17,7 @@ bump_version_and_tag:
     - git push origin "v$VERSION"
   needs:
     - pytest
-    - build_docs_site
+    - pages
   only:
     - ci_test
   when: manual

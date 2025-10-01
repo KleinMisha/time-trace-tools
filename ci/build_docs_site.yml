@@ -1,6 +1,6 @@
 pages:
   image: python:3.12
-  stage: build_docs
+  stage: build_docs_site
   script:
     - pip install mkdocs mkdocs-material
     - mkdocs build 
