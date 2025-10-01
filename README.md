@@ -1,3 +1,7 @@
+![pipeline status](https://gitlab.com/<namespace>/<project>/badges/main/pipeline.svg)
+![coverage report](https://gitlab.com/<namespace>/<project>/badges/main/coverage.svg)
+
+
 # Time Trace Tools 
 A handy-dandy toolkit for analyzing time trace data from either the magnetic tweezers or the TIRF microscope. 
 This package is intended to contain tools that make developing subsequent analysis code easier. 
