@@ -5,7 +5,7 @@ pytest_test:
     - curl -LsSf https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.local/bin:$PATH"
     - uv sync
-    - uv run pytest --cov --cov-report=html -v --junitxml=test-results.xml
+    - uv run pytest --cov --cov-report=html --cov-report=term -v --junitxml=test-results.xml
   artifacts:
     when: always
     reports:
