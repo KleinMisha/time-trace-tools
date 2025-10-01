@@ -19,7 +19,7 @@ bump_version_and_tag:
     - pytest
     - pages
   only:
-    - ci_test
+    - main
   when: manual
 
 
