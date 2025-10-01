@@ -5,14 +5,14 @@ bump_version_and_tag:
     - apk add --no-cache git
     - git config --global user.name "GitLab CI/CD"
     - git config --global user.email "gitlab-ci@email.com"
-    - git remote set-url origin https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
+    - git remote set-url origin https://${DEPLOY_USER}:${DEPLOY_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git
     - wget -qO- https://astral.sh/uv/install.sh | sh
     - export PATH="$HOME/.local/bin:$PATH" 
   script:
     - uv version --bump ${VERSION_TYPE:-patch} 
     - VERSION=$(uv version --short)
     - git commit -am "Bump version to $VERSION [ci skip]"
-    - git push https://gitlab+deploy-token:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:main
+    - git push origin HEAD:main
     - git tag "v$VERSION"
     - git push origin "v$VERSION"
   needs:
