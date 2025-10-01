@@ -3,8 +3,9 @@ build_docs_test:
   stage: build_docs
   script:
     - pip install mkdocs mkdocs-material
-    - mkdocs build 
+    - mkdocs build
     - mv site public
-    - echo "DRY RUN: Site built, will NOT be deployed"
+    - echo "DRY RUN Site built will NOT be deployed"
   only:
     - ci_test
+    
