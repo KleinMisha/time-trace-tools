@@ -5,8 +5,8 @@ test generic workings of TimeTrace class, using MagneticTweezersTrace as an inst
 import numpy as np
 import pytest
 
-from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
 from tests.data_types.mock_time_trace import MockTimeTrace
+from time_trace_tools.data_types.exception_definitions import InvalidTimeTraceError
 
 Scalar = int | float | np.integer | np.floating
 
@@ -295,3 +295,36 @@ def test_create_sections_by_label(time_trace: MockTimeTrace) -> None:
     ):
         assert len(values_complete_trace[4:6]) == len(values_part_of_trace)
         assert np.all(values_complete_trace[4:6] == values_part_of_trace)
+
+
+def test_determining_section_boundaries(time_trace: MockTimeTrace) -> None:
+    """Test adherence to API: producing the list of frame numbers where sections start / end goes as expected"""
+
+    nicknames_dict = {
+        (32, 34): ["Shaq", "Big Diesel", "Big Aristotle", "Superman", "Shaq-foo"],
+        (34, None): ["Giannis", "Greek Freak", "The Alphabet"],
+        (15, None): ["The Joker"],
+        (None, 30): ["Baby-faced assassin", "Chef Curry", "Steph"],
+    }
+    expected_boundaries = [32, 34, 34, 15, 30]
+    time_trace.add_labelled_sections_from_dictionary(nicknames_dict)
+    assert time_trace.determine_section_boundaries() == expected_boundaries
+
+
+def test_getting_labels(time_trace: MockTimeTrace) -> None:
+    """Test adherence to API for other programs"""
+    shaquille_oneal = ["Shaq", "Big Diesel", "Big Aristotle", "Superman", "Shaq-foo"]
+    time_trace.add_labels(shaquille_oneal)
+    assert time_trace.get_labels() == shaquille_oneal
+
+
+def test_getting_section_labels(time_trace: MockTimeTrace) -> None:
+    """Test adherence to API for other programs"""
+    nicknames_dict = {
+        (32, 34): ["Shaq", "Big Diesel", "Big Aristotle", "Superman", "Shaq-foo"],
+        (34, None): ["Giannis", "Greek Freak", "The Alphabet"],
+        (15, None): ["The Joker"],
+        (None, 30): ["Baby-faced assassin", "Chef Curry", "Steph"],
+    }
+    time_trace.add_labelled_sections_from_dictionary(nicknames_dict)
+    assert time_trace.get_section_labels() == nicknames_dict
