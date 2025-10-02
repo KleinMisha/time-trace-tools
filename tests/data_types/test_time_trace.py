@@ -316,3 +316,15 @@ def test_getting_labels(time_trace: MockTimeTrace) -> None:
     shaquille_oneal = ["Shaq", "Big Diesel", "Big Aristotle", "Superman", "Shaq-foo"]
     time_trace.add_labels(shaquille_oneal)
     assert time_trace.get_labels() == shaquille_oneal
+
+
+def test_getting_section_labels(time_trace: MockTimeTrace) -> None:
+    """Test adherence to API for other programs"""
+    nicknames_dict = {
+        (32, 34): ["Shaq", "Big Diesel", "Big Aristotle", "Superman", "Shaq-foo"],
+        (34, None): ["Giannis", "Greek Freak", "The Alphabet"],
+        (15, None): ["The Joker"],
+        (None, 30): ["Baby-faced assassin", "Chef Curry", "Steph"],
+    }
+    time_trace.add_labelled_sections_from_dictionary(nicknames_dict)
+    assert time_trace.get_section_labels() == nicknames_dict

@@ -295,3 +295,7 @@ class TimeTrace(ABC):
     def get_labels(self) -> list[str]:
         """Expose labels to other programs (which do not need to know implementation details)"""
         return list(self.labels)
+
+    def get_section_labels(self) -> dict[tuple[int, int], list[str]]:
+        """Expose labels to other programs (which do not need to know implementation details)"""
+        return dict(self.section_labels)
