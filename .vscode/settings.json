@@ -2,7 +2,7 @@
     // Workbench settings
     "workbench.colorTheme": "Default Dark Modern",
     "workbench.colorCustomizations": {
-        "titleBar.activeBackground":"#209797",
+        "titleBar.activeBackground":"#d4b113",
     },
 
     // Editor settings / formating settings 
