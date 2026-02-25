@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main] 
+    branches: [public-repo-misha] 
   pull_request:
-    branches: [main]
+    branches: [public-repo-misha]
 
 jobs:
   test:
@@ -40,7 +40,7 @@ jobs:
             htmlcov/
           retention-days: 7 
       
-      
+
       
           
 
