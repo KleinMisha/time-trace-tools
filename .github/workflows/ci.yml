@@ -44,7 +44,7 @@ jobs:
     name: Build Documentation and Deploy to Github Pages 
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/public-repo'
+    if: github.ref == 'refs/heads/public-repo-misha'
     permissions:
       contents: read
       pages: write
